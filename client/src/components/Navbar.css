@@ -1,0 +1,90 @@
+nav {
+  height: 10vh;
+}
+
+.links {
+  text-decoration: none;
+  color: white;
+}
+
+.logo {
+  text-decoration: none;
+  color: black;
+}
+.logo-img{
+  height: 100%;
+  width: 7rem;
+}
+
+.dropdown-menu {
+  border: none;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.offcanvas-body {
+  background-color: black;
+  color: beige;
+}
+
+.offcanvas-body .btn {
+  border: none;
+}
+
+.collapsible {
+  background-color: black;
+  color: beige;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.content1 {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.content2 {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.content .sub-categories {
+  padding-left: 15px;
+}
+
+.hoverEffect {
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.1s ease-in;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.icons {
+  margin: 0px 5px 0px 0px;
+}
+
+.hoverEffect:hover {
+  background-color: blueviolet;
+  animation: smoothHoverEffect 0.1s ease-in;
+}
+
+@keyframes smoothHoverEffect {
+  from {
+    background-color: initial;
+  }
+  to {
+    background-color: blueviolet;
+  }
+}
