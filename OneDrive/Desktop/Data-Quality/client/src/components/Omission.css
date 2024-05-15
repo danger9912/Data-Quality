@@ -1,0 +1,84 @@
+/* Omission Component Styles */
+
+.card {
+  .btnCon {
+    display:flex;
+    justify-content: space-around;
+    
+  }
+}
+
+/* Tabs Container */
+#uncontrolled-tab-example {
+    margin-top: 20px;
+  }
+  
+  /* Dropdown Container */
+  .dropdown {
+    margin-bottom: 20px;
+  }
+  
+  /* Table Styles */
+  .table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .loaderContainer .loader {
+    border: 0px;
+  }
+
+  /* Responsive Table Styles */
+  @media (max-width: 767px) {
+    .table {
+      display: block;
+      overflow-x: auto;
+    }
+  
+    .table thead,
+    .table tbody,
+    .table th,
+    .table td,
+    .table tr {
+      display: block;
+    }
+  
+    .table th,
+    .table td {
+      width: auto;
+    }
+  
+    .table thead {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+  
+    .table tr {
+      margin-bottom: 15px;
+    }
+  
+    .table td {
+      border: none;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+      padding-left: 50%;
+    }
+  
+    .table td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 5%;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+  }

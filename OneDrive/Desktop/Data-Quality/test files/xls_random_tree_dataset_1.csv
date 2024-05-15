@@ -1,0 +1,51 @@
+tree_id,species,height,leaf_color,soil_type,water_needs
+1,NA,8.86,Not Available,.,high
+2,NA,91.42,yellow,sandy,low
+3,neem,54.71,Not Available,N/A,medium
+4,oak,17.97,green,sandy,NULL
+5,oak,2.27,Not Available,.,high
+6,NA,62.51,yellow,clay,high
+7,NA,27.09,Not Available,.,high
+8,,41.63,green,.,medium
+9,NA,97.47,green,clay,NULL
+10,neem,38.03,yellow,sandy,NULL
+11,neem,,Not Available,.,medium
+12,NA,85.2,yellow,clay,low
+13,NA,48.57,Not Available,clay,low
+14,neem,38.22,Not Available,N/A,NULL
+15,neem,88.86,yellow,clay,high
+16,oak,,Not Available,sandy,NULL
+17,NA,53.1,yellow,sandy,NULL
+18,oak,7.1,Not Available,.,NULL
+19,neem,18.1,green,clay,NULL
+20,neem,24.68,yellow,clay,high
+21,neem,,yellow,sandy,NULL
+22,neem,81.13,yellow,.,high
+23,oak,25.64,green,.,high
+24,,78.48,green,sandy,NULL
+25,neem,51.38,green,sandy,medium
+26,oak,7.42,green,N/A,high
+27,NA,25.36,green,.,medium
+28,neem,71.15,Not Available,sandy,low
+29,NA,52.51,green,.,medium
+30,oak,83.12,Not Available,N/A,high
+31,,96.44,green,.,medium
+32,NA,46.54,green,sandy,low
+33,oak,24.87,Not Available,clay,medium
+34,NA,55.94,Not Available,sandy,NULL
+35,NA,,green,N/A,medium
+36,neem,15,green,clay,low
+37,neem,42.27,green,sandy,high
+38,,77.81,yellow,clay,medium
+39,neem,85.21,yellow,.,low
+40,oak,64.9,Not Available,N/A,high
+41,neem,23.66,yellow,sandy,high
+42,NA,11.66,Not Available,.,medium
+43,NA,30.08,Not Available,N/A,high
+44,oak,68.23,Not Available,clay,high
+45,oak,14.12,yellow,.,high
+46,NA,2.16,Not Available,.,low
+47,NA,,Not Available,sandy,medium
+48,oak,14.39,Not Available,.,high
+49,neem,73.49,yellow,sandy,medium
+50,NA,51.92,green,.,high
