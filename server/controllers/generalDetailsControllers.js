@@ -40,25 +40,42 @@ exports.saveGeneralDetails = async (req, res, next) => {
   }
 };
 
-exports.fetchDataFormat = async (req, res, next) => {
+exports.fetchfileDataFormat = async (req, res, next) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM data_formate');
-    res.json(rows);
+    const filename = req.body.file_name;
+    console.log("****");
+    console.log(filename);
+    const rows = await pool.query('SELECT * FROM data_formate WHERE file_name = $1', [filename]);
+
+    // const rows = await pool.query(`SELECT * FROM data_formate where file_name = ${filename}`);
+    res.json(rows.rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
 
+exports.fetchDataFormat = async (req, res, next) => {
+  try {
+    const filename = req.file_name;
+    const rows = await pool.query('SELECT * FROM tttable');
+    res.json(rows.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 exports.dateFormat = async (req, res, next) => {
   try {
-    // console.log(req.file.path);
+    console.log(req.file.path);
+    const fileName = req.body.fileName; // Access file name from request body
+
+    // console.log("File Name:", fileName);
 
     if (!req.file) {
       return res.status(400).json({ message: "Invalid file" });
     }
-
 
     const workbook = XLSX.readFile(req.file.path);
     const sheetName = workbook.SheetNames[0];
@@ -164,6 +181,7 @@ exports.dateFormat = async (req, res, next) => {
         format_used: formatUsed,
         'Tranformed_date(CCYY-MM-DD)': changedDates1,
         error: error,
+        file_name: fileName, // Use the extracted file name here
       };
     });
 
@@ -174,8 +192,8 @@ exports.dateFormat = async (req, res, next) => {
     //   await client.query('BEGIN');
     //   for (const obj of jsonObjects) {
     //     const query = {
-    //       text: `INSERT INTO data_formate(actual_date, format_used, transformed_date, error) VALUES($1, $2, $3, $4)`,
-    //       values: [obj.actual_date, obj.format_used, obj['Tranformed_date(CCYY-MM-DD)'], obj.error],
+    //       text: `INSERT INTO data_formate(actual_date, format_used, transformed_date, error, file_name) VALUES($1, $2, $3, $4, $5)`,
+    //       values: [obj.actual_date, obj.format_used, obj['Tranformed_date(CCYY-MM-DD)'], obj.error, obj.file_name],
     //     };
     //     await client.query(query);
     //   }
@@ -186,16 +204,89 @@ exports.dateFormat = async (req, res, next) => {
     // } finally {
     //   client.release();
     // }
-
-
     const count = jsonObjects.filter((obj) => obj.error === "0").length;
     const t = jsonObjects.filter((obj) => obj.error === "1").length;
     const accuracy = (count / (count + t)) * 100;
-    console.log("hi")
-    res.json({ data: jsonObjects, accuracy });
+  //   client = await pool.connect();
+  //   try{
+  //   await client.query("BEGIN");
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+  //   // Insert data into the data_formate table
+  //   for (const obj of jsonObjects) {
+  //     const queryDataFormate = {
+  //       text: `INSERT INTO data_formate(actual_date, format_used, transformed_date, error, file_name) VALUES($1, $2, $3, $4, $5)`,
+  //       values: [obj.actual_date, obj.format_used, obj['Tranformed_date(CCYY-MM-DD)'], obj.error, obj.file_name],
+  //     };
+  //     await client.query(queryDataFormate);
+  //   }
+
+  //   // Insert data into the file_statistics table
+  //   const currentDate = moment().format("YYYY-MM-DD");
+  //   const queryFileStatistics = {
+  //     text: `INSERT INTO tttable(file_name, created_date, accuracy) VALUES($1, $2, $3)`,
+  //     values: [fileName, currentDate, accuracy],
+  //   };
+  //   await client.query(queryFileStatistics);
+
+  //   // Commit the transaction
+  //   await client.query("COMMIT");
+
+  //   res.json({ data: jsonObjects, accuracy });
+  // } catch (error) {
+  //   // Rollback the transaction if an error occurs
+  //   if (client) {
+  //     await client.query("ROLLBACK");
+  //   }
+  //   console.error(error);
+  //   res.status(500).json({ message: "Internal server error" });
+  // } finally {
+  //   // Release the client back to the pool
+  //   if (client) {
+  //     client.release();
+  //   }
+  // }
+
+
+
+
+
+  //   res.json({ data: jsonObjects, accuracy });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ message: "Internal server error" });
+  // }
+  client = await pool.connect();
+  await client.query('BEGIN');
+
+  for (const obj of jsonObjects) {
+    const queryDataFormate = {
+      text: `INSERT INTO data_formate(actual_date, format_used, transformed_date, error, file_name) VALUES($1, $2, $3, $4, $5)`,
+      values: [obj.actual_date, obj.format_used, obj['Tranformed_date(CCYY-MM-DD)'], obj.error, obj.file_name],
+    };
+    await client.query(queryDataFormate);
   }
+
+  // const count = jsonObjects.filter((obj) => obj.error === "0").length;
+  // const t = jsonObjects.filter((obj) => obj.error === "1").length;
+  // const accuracy = (count / (count + t)) * 100;
+
+  const currentDate = moment().format("YYYY-MM-DD");
+  const queryFileStatistics = {
+    text: `INSERT INTO tttable(file_name, created_date, accuracy) VALUES($1, $2, $3)`,
+    values: [fileName, currentDate, accuracy],
+  };
+  await client.query(queryFileStatistics);
+
+  await client.query('COMMIT');
+
+  res.json({ data: jsonObjects, accuracy });
+} catch (error) {
+  if (client) {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+  console.error(error);
+  res.status(500).json({ message: 'Internal server error' });
+}
+
 };
