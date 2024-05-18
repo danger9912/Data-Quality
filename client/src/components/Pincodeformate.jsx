@@ -7,14 +7,13 @@ import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DownloadIcon from "@mui/icons-material/Download";
+// import DownloadIcon from "@mui/icons-material/Download";
 import "./Omission.css";
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
-
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 
-const Omission = () => {
+const Pincodeformate = () => {
   const omissionData = {
     file_name: "",
     field_names: "",
@@ -31,12 +30,12 @@ const Omission = () => {
   const [responseData, setResponseData] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [downloadedFileName, setDownloadedFileName] = useState("");
-
   const [fetchingFieldNames, setFetchingFieldNames] = useState(false);
   const [sendingFieldNames, setSendingFieldNames] = useState(false);
   const [savingData, setSavingData] = useState(false);
-  const [deletingLogs, setDeletingLogs] = useState(false);
-  const [downloadingData, setDownloadingData] = useState(false);
+  // const [deletingLogs, setDeletingLogs] = useState(false);
+  // const [downloadingData, setDownloadingData] = useState(false);
+  const [pincodeValidationData, setPincodeValidationData] = useState([]);
 
   let sendField = [];
 
@@ -98,6 +97,48 @@ const Omission = () => {
     }
   };
 
+  // const sendFieldNames = async () => {
+  //   try {
+  //     setSendingFieldNames(true);
+  //     if (selectedFilename) {
+  //       target.forEach((e) => {
+  //         sendField.push(e.value);
+  //       });
+  //       const response = await axios.post(
+  //         "http://localhost:3001/api/pincodeformate/pincode-auto",
+  //         {
+  //           filename: selectedFilename,
+  //           attributes: sendField,
+  //         }
+  //       );
+
+  //       console.log(response.data);
+  //       setOmissionRate(response.data.omissionRate);
+
+  //       const targetArr = [];
+  //       target.forEach((e) => {
+  //         targetArr.push(e.value);
+  //       });
+
+  //       setOmission((prevOmission) => ({
+  //         ...prevOmission,
+  //         field_names: targetArr,
+  //         file_name: selectedFilename,
+  //         omission_rate: response.data.omissionRate,
+  //       }));
+
+  //       // handleChange();
+  //     } else {
+  //       console.log("Please Select a file.");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setSendingFieldNames(false);
+  //   }
+  //   sendField = [];
+  // };
+
   const sendFieldNames = async () => {
     try {
       setSendingFieldNames(true);
@@ -106,29 +147,30 @@ const Omission = () => {
           sendField.push(e.value);
         });
         const response = await axios.post(
-          "http://localhost:3001/api/omission/omission-auto",
+          "http://localhost:3001/api/pincodeformate/pincode-auto",
           {
             filename: selectedFilename,
             attributes: sendField,
           }
         );
 
-        console.log(response.data);
-        setOmissionRate(response.data.omissionRate);
+        // console.log(response.data);
+        // setOmissionRate(response.data.omissionRate);
 
-        const targetArr = [];
-        target.forEach((e) => {
-          targetArr.push(e.value);
-        });
+        // const targetArr = [];
+        // target.forEach((e) => {
+        //   targetArr.push(e.value);
+        // });
 
-        setOmission((prevOmission) => ({
-          ...prevOmission,
-          field_names: targetArr,
-          file_name: selectedFilename,
-          omission_rate: response.data.omissionRate,
-        }));
+        // setOmission((prevOmission) => ({
+        //   ...prevOmission,
+        //   field_names: targetArr,
+        //   file_name: selectedFilename,
+        //   omission_rate: response.data.omissionRate,
+        // }));
 
-        // handleChange();
+        // Set the pincode validation data
+        setPincodeValidationData(response.data);
       } else {
         console.log("Please Select a file.");
       }
@@ -145,7 +187,7 @@ const Omission = () => {
       setSavingData(true);
       console.log(omission);
       const response = await axios.post(
-        "http://localhost:3001/api/omission/omission-log/",
+        "http://localhost:3001/api/omission/pincode-log/",
         omission
       );
       console.log(response.data);
@@ -169,7 +211,7 @@ const Omission = () => {
 
   const viewData = async (filename) => {
     try {
-      setDownloadingData(true);
+      // setDownloadingData(true);
       const response = await axios.get(
         `http://localhost:3001/api/view/${filename}`
       );
@@ -180,7 +222,7 @@ const Omission = () => {
     } catch (error) {
       console.log("Error fetching data:", error);
     } finally {
-      setDownloadingData(false);
+      // setDownloadingData(false);
     }
   };
 
@@ -205,22 +247,42 @@ const Omission = () => {
     FileSaver.saveAs(blob, `${downloadedFileName.split(".")[0]}.xlsx`);
   };
 
-  const deleteLog = async () => {
-    console.log(selectedIds);
-    try {
-      setDeletingLogs(true);
-      const response = await axios.delete(
-        "http://localhost:3001/api/omission/omission-log-DeleteAll",
-        { data: selectedIds }
-      );
-      console.log(response.data);
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting logs:", error);
-    } finally {
-      setDeletingLogs(false);
-    }
+  // const deleteLog = async () => {
+  //   console.log(selectedIds);
+  //   try {
+  //     setDeletingLogs(true);
+  //     const response = await axios.delete(
+  //       "http://localhost:3001/api/omission/omission-log-DeleteAll",
+  //       { data: selectedIds }
+  //     );
+  //     console.log(response.data);
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error("Error deleting logs:", error);
+  //   } finally {
+  //     setDeletingLogs(false);
+  //   }
+  // };
+  const calculateAccuracy = (data) => {
+    if (!data || data.length === 0) return 0;
+  
+    // Count the number of true values in the 'isvalid' property
+    const trueCount = data.reduce((acc, curr) => {
+      if (curr.isvalid === true) {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    }, 0);
+  
+    // Calculate the accuracy percentage
+    const accuracy = (trueCount / data.length) * 100;
+    return accuracy.toFixed(2);
   };
+  
+  // Calculate accuracy
+  const accuracy = calculateAccuracy(pincodeValidationData);
+  
 
   return (
     <>
@@ -251,11 +313,6 @@ const Omission = () => {
             )}
           </button>
         </center>
-        <div className="alert alert-primary text-center container">
-          Formula for calculating omissions: (Count of Omitted Features / (Total
-          number of features * Total number of records)) * 100
-        </div>
-        <br />
 
         <center>
           <div
@@ -282,7 +339,6 @@ const Omission = () => {
               />
             </div>
           </div>
-
           <button
             className="btn btn-primary mt-3"
             onClick={sendFieldNames}
@@ -294,8 +350,7 @@ const Omission = () => {
               "Calculate ommission Rate"
             )}
           </button>
-          <h4>Ommission Rate: {omissionRate.toFixed(2)}%</h4>
-
+          <h4>Pincode Accuracy Rate: {accuracy}%</h4>
           <button
             className="btn btn-primary mb-2"
             onClick={handleSave}
@@ -303,6 +358,26 @@ const Omission = () => {
           >
             {savingData ? <Spinner animation="border" size="sm" /> : "Save"}
           </button>
+          <div style={{ margin: "0 20px", overflowX: "auto" }}>
+            <DataTable
+              value={pincodeValidationData} // Use pincodeValidationData for the table value
+              paginator
+              rows={5}
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              tableStyle={{ minWidth: "5rem" }}
+            >
+              <Column
+                field="pincode"
+                header="Pincode"
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="isvalid"
+                header="IsValid"
+                style={{ width: "25%" }}
+              ></Column>
+            </DataTable>
+          </div>
         </center>
         <div
           style={{ display: "flex", justifyContent: "center", height: "100%" }}
@@ -376,18 +451,6 @@ const Omission = () => {
               />
             </DataTable>
             {/* <button>Save</button> */}
-            <button
-              className="btn btn-primary dltButton"
-              style={{ width: "5rem" }}
-              onClick={deleteLog}
-              disabled={deletingLogs}
-            >
-              {deletingLogs ? (
-                <Spinner animation="border" size="sm" />
-              ) : (
-                "Delete"
-              )}
-            </button>
           </div>
         </div>
       </div>
@@ -437,4 +500,4 @@ const Omission = () => {
   );
 };
 
-export default Omission;
+export default Pincodeformate;

@@ -11,6 +11,7 @@ import Format from "./components/Format";
 import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
 import AccuracyTime from "./components/AccuracyTime";
 import DateFormat from './components/DateFormat';
+import Pincodeformate from "./components/Pincodeformate";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
         <Route path="/temporalval" element={<TemporalVal />} />
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyTime />} />
-        
+        <Route path="/pincode" element={<Pincodeformate/>}/>
       </Routes>
      </BrowserRouter>
   );

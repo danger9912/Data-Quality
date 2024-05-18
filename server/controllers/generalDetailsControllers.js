@@ -290,3 +290,44 @@ exports.dateFormat = async (req, res, next) => {
 }
 
 };
+
+exports.fetchPincodeFormate = async (req, res, next) => {
+  // console.log(req.file.path);
+    const fileName = req.body.fileName; 
+    if (!req.file) {
+      return res.status(400).json({ message: "Invalid file" });
+    }
+
+    const workbook = XLSX.readFile(req.file.path);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+      header: 1,
+      raw: false,
+    });
+
+    const headers = jsonData[0];
+    const data = jsonData.slice(0);
+    const jsonObject = data.map((row) => {
+      const obj = {};
+      row.forEach((value, index) => {
+        obj[headers[index]] = value;
+      });
+      return obj;
+    });
+
+    const filteredJsonObject = jsonObject.filter((obj) => {
+      return Object.values(obj).some(
+        (val) => val !== null && typeof val !== "object"
+      );
+    });
+
+    const extractedDates = [];
+    filteredJsonObject.forEach((obj) => {
+      if (obj.Date != null) {
+        extractedDates.push(obj.Date);
+      }
+    });
+    
+}

@@ -13,6 +13,7 @@ const formatConsistencyRoutes = require('./routes/formatConsistencyRoutes');
 const comissionRoutes = require('./routes/comissionRoutes');
 const temporalQualityRoutes = require('./routes/temporatQualityRoutes');
 const accuracyRoutes = require('./routes/accuracyRoutes')
+const PincodeformateRoute = require('./routes/PincodeformateRoute');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -27,7 +28,7 @@ app.use('/api/format', formatConsistencyRoutes);
 app.use('/api/comission', comissionRoutes);
 app.use('/api/temporalquality', temporalQualityRoutes);
 app.use('/api/accuracymeasurement', accuracyRoutes);
-
+app.use('/api/pincodeformate', PincodeformateRoute);
 
 
 app.post('/api/fieldnames', async (req, res) => {
