@@ -15,6 +15,9 @@ const temporalQualityRoutes = require('./routes/temporatQualityRoutes');
 const accuracyRoutes = require('./routes/accuracyRoutes')
 const PincodeformateRoute = require('./routes/PincodeformateRoute');
 const stationCodeRoute = require('./routes/stationCodeRouter')
+const stateFormatRoute =require('./routes/stateFormatRoute');
+const  unionTerrFormatRoute =require('./routes/unionTerrFormatRoute');
+const  districtFormatRoute =require('./routes/districtFormatRouter');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,6 +34,9 @@ app.use('/api/temporalquality', temporalQualityRoutes);
 app.use('/api/accuracymeasurement', accuracyRoutes);
 app.use('/api/pincodeformate', PincodeformateRoute);
 app.use('/api/stationCode', stationCodeRoute);
+app.use('/api/state',stateFormatRoute);
+app.use('/api/union',unionTerrFormatRoute);
+app.use('/api/district',districtFormatRoute);
 
 
 

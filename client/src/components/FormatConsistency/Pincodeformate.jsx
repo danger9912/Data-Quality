@@ -8,7 +8,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 // import DownloadIcon from "@mui/icons-material/Download";
-import "./Omission.css";
+import "../Omission.css";
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
@@ -287,7 +287,7 @@ const Pincodeformate = () => {
   return (
     <>
       <div>
-        <h2>&nbsp;Omission</h2>
+        <h2>&nbsp;Pincode Formate</h2>
         <center>
           <input
             className="form-control uploadBtnInput"

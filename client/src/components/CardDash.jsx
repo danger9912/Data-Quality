@@ -30,7 +30,6 @@ const CardDash = ({
         "Domain Consistency",
         "Format Consistency",
         "Topology Consistency",
-        "Format Date"
       ],
     },
     {
@@ -63,7 +62,7 @@ const CardDash = ({
     Omission: "/omission",
     Comission: "/comission",
     "Format Consistency": "/formatconsistency",
-    "Format Date": "/formatdate",
+   
     "Domain Consistency": "/domainconsistency",
     "Temporal validity":"/temporalval",
     "Accuracy of Time Measurement":"/activemeasurement" 

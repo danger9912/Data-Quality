@@ -5,12 +5,14 @@ import CodeNumber from './FormatConsistency/Railways';
 import LatLong from './FormatConsistency/LatLong';
 import FileFormat from './FormatConsistency/FileFormat';
 import Date from './FormatConsistency/Date';
+import Pincodeformate from './FormatConsistency/Pincodeformate';
 const FormatConsist = () => {
     const [fileFormat, setFileFormat] = useState(1);
     const [dateFormat, setDateFormat] = useState(0);
     const [railways, setRailways] = useState(0);
     const [StationCode, setStationCode] = useState(0);
     const [latlong, setLatLong] = useState(0);
+    const [pincode, setPincode] = useState(0);
    
     
   return (
@@ -23,6 +25,7 @@ const FormatConsist = () => {
                 setFileFormat(1);
                 setLatLong(0);
                 setStationCode(0);
+                setPincode(0);
             }}
             style={{
               marginTop:"10px",
@@ -44,6 +47,7 @@ const FormatConsist = () => {
                 setFileFormat(0);
                 setLatLong(0);
                 setStationCode(0);
+                setPincode(0);
             }}
             style={{
               padding: '10px 20px',
@@ -64,6 +68,7 @@ const FormatConsist = () => {
                 setFileFormat(0);
                 setLatLong(0);
                 setStationCode(1);
+                setPincode(0);
             }}
             style={{
               padding: '10px 20px',
@@ -84,6 +89,7 @@ const FormatConsist = () => {
                 setFileFormat(0);
                 setLatLong(1);
                 setStationCode(0);
+                setPincode(0);
             }}
             style={{
               padding: '10px 20px',
@@ -104,6 +110,7 @@ const FormatConsist = () => {
                 setFileFormat(0);
                 setLatLong(0);
                 setStationCode(0);
+                setPincode(0);
             }}
             style={{
               padding: '10px 20px',
@@ -117,6 +124,27 @@ const FormatConsist = () => {
           >
            Railway Code Format
           </button>
+          <button
+              onClick={() => {    
+                setRailways(0);
+                setDateFormat(0);
+                setFileFormat(0);
+                setLatLong(0);
+                setStationCode(0);
+                setPincode(1);
+            }}
+            style={{
+              padding: '10px 20px',
+              marginRight: '20px',
+              backgroundColor: pincode === 1 ? '#4CAF50' : '#ddd',
+              color: pincode === 1 ? '#fff' : '#000',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+           Pincode Format
+          </button>
           </center>
 
           {StationCode === 1 && <Pincode />}
@@ -124,6 +152,7 @@ const FormatConsist = () => {
           {dateFormat === 1 && <Date/>}
           {railways === 1 && <CodeNumber/>}
           {latlong === 1 && <LatLong/>}
+          {pincode ===1 && <Pincodeformate/>}
       
     </>
   )

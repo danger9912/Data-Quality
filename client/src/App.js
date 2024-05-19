@@ -11,8 +11,11 @@ import Format from "./components/Format";
 import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
 import AccuracyTime from "./components/AccuracyTime";
 import DateFormat from './components/DateFormat';
-import Pincodeformate from "./components/Pincodeformate";
+import Pincodeformate from "./components/FormatConsistency/Pincodeformate";
 import FormatConsist from "./components/FormatConsist";
+import StateFormat from "./components/FormatConsistency/StateFormat";
+import UnionTerritoriesFormat from "./components/FormatConsistency/UnionTerritoriesFormat";
+import DistrictFormat from "./components/FormatConsistency/DistrictFormat";
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyTime />} />
         <Route path="/pincode" element={<Pincodeformate/>}/>
+        <Route path="/state" element={<StateFormat/>}/>
+        <Route path="/unionterr" element={<UnionTerritoriesFormat/>}/>
+        <Route path="/district" element={<DistrictFormat/>}/>
       </Routes>
      </BrowserRouter>
   );
