@@ -12,18 +12,19 @@ import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
 import AccuracyTime from "./components/AccuracyTime";
 import DateFormat from './components/DateFormat';
 import Pincodeformate from "./components/Pincodeformate";
+import FormatConsist from "./components/FormatConsist";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/generaldetails" element={<GeneralDetails />} />
         <Route path="/omission" element={<Omission />} />
         <Route path="/comission" element={<Comission />} />
         <Route path="/domainconsistency" element={<DomainConsistency />} />
-        <Route path="/formatconsistency" element={<FormatConsistency />} />
+        <Route path="/formatconsistency" element={<FormatConsist />} />
         <Route path="/format" element={<Format />} />
         <Route path="/formatdate" element={<DateFormat />} />
         <Route path="/temporalval" element={<TemporalVal />} />

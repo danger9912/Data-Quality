@@ -7,7 +7,9 @@ const path = require('path');
 const db = require("../database/connection");
 
 const domainConsistencyServices = {
+  
     async domainConsistencyAuto(body) {
+     
         const filename = body.filename
         const filePath = path.join(__dirname, '../uploads', filename);
         const data = await fs.readFile(filePath, 'utf8');

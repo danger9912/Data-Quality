@@ -14,6 +14,7 @@ const comissionRoutes = require('./routes/comissionRoutes');
 const temporalQualityRoutes = require('./routes/temporatQualityRoutes');
 const accuracyRoutes = require('./routes/accuracyRoutes')
 const PincodeformateRoute = require('./routes/PincodeformateRoute');
+const stationCodeRoute = require('./routes/stationCodeRouter')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -29,11 +30,13 @@ app.use('/api/comission', comissionRoutes);
 app.use('/api/temporalquality', temporalQualityRoutes);
 app.use('/api/accuracymeasurement', accuracyRoutes);
 app.use('/api/pincodeformate', PincodeformateRoute);
+app.use('/api/stationCode', stationCodeRoute);
+
 
 
 app.post('/api/fieldnames', async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const filename = req.body.filename;
         const filepath = path.join(__dirname, 'uploads', filename);
         const rawData = await fs.readFile(filepath);
@@ -62,6 +65,7 @@ app.get('/api/view/:name', async (req, res, next) => {
 
         const data = await fs.readFile(filePath, 'utf8');
         const jsonData = JSON.parse(data);
+       console.log(jsonData)
         res.status(200).json({ file_data: jsonData });
     } catch (error) {
         console.error(`Error reading file: ${error.message}`);

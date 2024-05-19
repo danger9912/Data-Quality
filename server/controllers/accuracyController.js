@@ -5,7 +5,7 @@ exports.getallcols = async (req, res, next) => {
         // console.log(req.body)
         // const getcols = req.body;
         const result = await accuracyServices.getcols(req.body.filename, req.body.attributes);
-     
+    //  console.log(result)
         res.status(200).json(result);
     } catch (err) {
         console.log(err);

@@ -13,6 +13,7 @@ exports.saveGeneralDetails = async (req, res, next) => {
     if (!req.file) {
       return res.status(400).send("No file was uploaded.");
     }
+    console.log("hi")
     const file = req.file;
     const fileSizeInBytes = file.size;
     const fileExtension = file.originalname.split(".").pop();

@@ -128,7 +128,9 @@ const AccuracyTime = () => {
   const [mean,setMean] =useState("");
   const [source, setSource] = useState([]);
   const [ target,setTarget] = useState([]);
-
+  const [Ref,setRef] =useState(false)
+  const[goodS,setGoodS] =useState(0);
+  const[badS,setBadS] =useState(0);
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     const formData = new FormData();
@@ -156,7 +158,7 @@ const AccuracyTime = () => {
           "http://localhost:3001/api/fieldnames",
           { filename: selectedFilename }
         );
-        console.log(response.data.field_names);
+        // console.log(response.data.field_names);
         const fieldNames = response.data.field_names.map((fieldName) => ({
           label: fieldName,
           value: fieldName,
@@ -175,7 +177,8 @@ const AccuracyTime = () => {
   // }, [selectedFilename]);
 
   useEffect(() => {
-    const dashCount = data.filter(item => item.originalData.date === undefined).length;
+    console.log("178")
+    const dashCount = data.filter(item => item.originalData === '-').length;
     const totalCount = data.length;
     const percentage = (dashCount / totalCount) * 100;
     setErrorPercentage(parseFloat(percentage.toFixed(4)));
@@ -183,7 +186,7 @@ const AccuracyTime = () => {
 
   useEffect(() => {
     const filtered = data.filter(item => {
-      const dashCount = item.originalData.date === undefined ? 1 : 0;
+      const dashCount = item.originalData === '-' ? 1 : 0;
       const totalCount = 1;
       const percentage = (dashCount / totalCount) * 100;
       return percentage <= parseInt(selectedErrorOption);
@@ -191,10 +194,12 @@ const AccuracyTime = () => {
     setFilteredData(filtered);
   }, [data, selectedErrorOption]);
   useEffect(() => {
+    console.log("194")
     const notRand =filteredData.filter(item => !randData.includes(item));
     setNotRandData(notRand);
-  }, [randData, filteredData]);
+  }, [randData, filteredData,confidenceLevel]);
 
+  
   useEffect(() => {
     const numRowsToSelect = Math.ceil(filteredData.length * (parseFloat(selectedErrorOption) / 100));
     const indices = Array.from({ length: filteredData.length }, (_, index) => index);
@@ -208,21 +213,35 @@ const AccuracyTime = () => {
   }, [selectedErrorOption]);
 
 
+
   useEffect(() => {
-    setLimits(calculateConfidenceInterval(randData, confidenceLevel));
-    const goodCount = notRandData.filter(item => item.originalData.date >= limits[0] && item.originalData.date <= limits[1]).length;
+    console.log("213")
+    // setLimits(calculateConfidenceInterval(randData, confidenceLevel));
+    const goodCount = notRandData.filter(item => item.originalData >= limits[0] && item.originalData <= limits[1]).length;
     setGood(goodCount);
-    const badCount = notRandData.filter(item => item.originalData.date <= limits[0] || item.originalData.date >= limits[1]).length;
+    const badCount = notRandData.filter(item => item.originalData <= limits[0] || item.originalData >= limits[1]).length;
     setBad(badCount);
-  }, [confidenceLevel, randData, limits]);
+  }, [limits]);
+
+  useEffect(() => {
+    console.log("213")
+    // setLimits(calculateConfidenceInterval(randData, confidenceLevel));
+    const goodCount = randData.filter(item => item.originalData >= limits[0] && item.originalData <= limits[1]).length;
+    setGoodS(goodCount);
+    const badCount = randData.filter(item => item.originalData <= limits[0] || item.originalData >= limits[1]).length;
+    setBadS(badCount);
+  }, [limits]);
 
   useEffect(()=>{
+    console.log("221")
     fetchtableData()
-  },[tableData])
-
+  },[Ref])
   useEffect(()=>{
-    console.log(target)
-  },[target])
+    console.log("221")
+    setLimits(calculateConfidenceInterval(randData, confidenceLevel));
+  },[confidenceLevel, randData])
+
+
 
   const fetchData = async () => {
     try {
@@ -238,6 +257,7 @@ const AccuracyTime = () => {
   const fetchtableData = async ()=>{
     try{
       const response = await axios.post('http://localhost:3001/api/accuracymeasurement/getlogs');
+      // console.log("hi")
       setTableData(response.data);
     }
     catch(err){
@@ -258,8 +278,9 @@ const AccuracyTime = () => {
   };
 // const mean =0;
   const calculateConfidenceInterval = (numbers, confidenceLevel) => {
-    const dates = numbers.map(item => item.originalData.date);
+    const dates = numbers.map(item => item.originalData);
      const mean = calculateMean(dates);
+    //  console.log(mean);
      setMean(mean);
     const standardDeviation = calculateStandardDeviation(dates);
     const sampleSize = dates.length;
@@ -296,11 +317,27 @@ const AccuracyTime = () => {
   const handleDropdownChangeAlpha = (event) => {
     setConfidenceLevel(event.target.value);
   };
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
   const handleSave = async() =>{
     const d = {
-      confidence_level : confidenceLevel*100,
-      good_percentage :parseFloat((good / (bad + good) * 100).toFixed(2)),
-      bad_percentage : parseFloat((bad / (bad + good) * 100).toFixed(2)),
+      // confidence_level : confidenceLevel*100,
+      confidence_level : parseFloat(confidenceLevel * 100).toFixed(2),
+      good_percentage_r :parseFloat((good / (bad + good) * 100).toFixed(2)),
+      notgood_percentage_r : parseFloat((bad / (bad + good) * 100).toFixed(2)),
+      good_percentage_s :parseFloat((goodS / (badS + goodS) * 100).toFixed(2)),
+      notgood_percentage_s : parseFloat((badS / (badS + goodS) * 100).toFixed(2)),
+      low_bound:limits[0],
+      high_bound:limits[1],
+      created_date : getCurrentDateTime(),
       file_name: selectedFilename
     }
     console.log(d)
@@ -313,6 +350,7 @@ const AccuracyTime = () => {
           title: 'Success!',
           text: 'Data has been successfully inserted.',
         });
+        setRef(Ref === true ? false : true);
       } catch (error) {
         // Show error message using SweetAlert
         Swal.fire({
@@ -524,7 +562,7 @@ const attributeSelected = ()=>{
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
                   <TableHeader>Date(YYYY-MM-DD)</TableHeader>
-                  <TableHeader>Number</TableHeader>
+                  <TableHeader>Status</TableHeader>
                 </tr>
               </thead>
               <tbody>
@@ -532,9 +570,9 @@ const attributeSelected = ()=>{
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.convertedData}</TableCell>
-                    <TableCell>{item.originalData.date === undefined ? "---" : item.originalData.date}</TableCell>
+                    <TableCell>{item.originalData === '-' ? "Invalid" : "Valid"}</TableCell>
                   </TableBodyRow>
-                ))}
+                ))} 
               </tbody>
             </Table1>
             </TableWrapper>
@@ -551,7 +589,7 @@ const attributeSelected = ()=>{
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
                   <TableHeader>Date(YYYY-MM-DD)</TableHeader>
-                  <TableHeader>Number</TableHeader>
+                  {/* <TableHeader>Number</TableHeader> */}
                 </tr>
               </thead>
               <tbody>
@@ -559,7 +597,7 @@ const attributeSelected = ()=>{
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.convertedData}</TableCell>
-                    <TableCell>{item.originalData.date === undefined ? "---" : item.originalData.date}</TableCell>
+                    {/* <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell> */}
                   </TableBodyRow>
                 ))}
               </tbody>
@@ -580,8 +618,8 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date</TableHeader>
-                  <TableHeader>Number</TableHeader>
+                  <TableHeader>Date(YYYY-MM-DD)</TableHeader>
+                  {/* <TableHeader>Number</TableHeader> */}
                 </tr>
               </thead>
               <tbody>
@@ -589,7 +627,7 @@ const attributeSelected = ()=>{
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.convertedData}</TableCell>
-                    <TableCell>{item.originalData.date === undefined ? "---" : item.originalData.date}</TableCell>
+                    {/* <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell> */}
                   </TableBodyRow>
                 ))}
               </tbody>
@@ -629,7 +667,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Number</TableHeader>
+                  <TableHeader>Date</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>
@@ -637,9 +675,9 @@ const attributeSelected = ()=>{
                 {randData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.originalData.date === undefined ? "---" : item.originalData.date}</TableCell>
+                    <TableCell>{item.convertedData === '-' ? "---" : item.convertedData}</TableCell>
                     <TableCell>
-                      {item.originalData.date >= limits[0] && item.originalData.date <= limits[1] ? (
+                      {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
                         <>Bad</>
@@ -656,7 +694,7 @@ const attributeSelected = ()=>{
             <h5>Remaining Data</h5>
             <div style={{ marginRight: "10px", display: "flex" }}>
              
-              <button1 style={{ backgroundColor: "#4CAF50", border: "none", color: "white", padding: "10px 20px", fontSize: "15px", cursor: "pointer", borderRadius: "8px",marginLeft:"10px"}} onClick={handleSave}>Save</button1>
+              <button style={{ backgroundColor: "#4CAF50", border: "none", color: "white", padding: "10px 20px", fontSize: "15px", cursor: "pointer", borderRadius: "8px",marginLeft:"10px"}} onClick={handleSave}>Save</button>
             </div>
 
             <Lab>
@@ -675,7 +713,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Number</TableHeader>
+                  <TableHeader>Date</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>
@@ -683,9 +721,9 @@ const attributeSelected = ()=>{
                 {notRandData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.originalData.date === undefined ? "---" : item.originalData.date}</TableCell>
+                    <TableCell>{item.convertedData === '-' ? "---" : item.convertedData}</TableCell>
                     <TableCell>
-                      {item.originalData.date >= limits[0] && item.originalData.date <= limits[1] ? (
+                      {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
                         <>Bad</>
@@ -704,27 +742,66 @@ const attributeSelected = ()=>{
         <h5 style={{marginBottom:"40px",marginTop:"50px"}}>Table data</h5>
             <DataTable
               value={tableData}
-              style={{marginTop:"10px",marginLeft:"10px",width:"60%",border:"1px solid black",marginBottom:"20px" }}
+              style={{marginTop:"10px",marginLeft:"10px",width:"90%",border:"1px solid black",marginBottom:"20px" }}
               paginator
               rows={5}
               rowsPerPageOptions={[5, 10, 25, 50]}
               tableStyle={{ minWidth: "5rem" }}
             >
+                <Column
+                field="file_name"
+                header="FileName"
+                style={{ width: "25%" }}
+              ></Column>
               <Column
                 field="confidence_level"
                 header="Confidence Level(in%)"
                 style={{ width: "25%" }}
               ></Column>
-              <Column
-                field="good_percentage"
-                header="Good Percentage (in%)"
+               <Column
+                field="created_date"
+                header={
+                  <>
+                   Created At <br/> (YYYY-MM -DD HH:MM:SS)
+                   </>
+                   }
+                style={{ width: "25%" }}
+              ></Column>
+               <Column
+                field="low_bound"
+                header="Lower Bound"
                 style={{ width: "25%" }}
               ></Column>
               <Column
-                field="bad_percentage"
-                header="Bad Percentage (in%)"
+                field="high_bound"
+                header="High Bound"
                 style={{ width: "25%" }}
               ></Column>
+
+              <Column
+                field="good_percentage_r"
+                header="Remaining data Good Accuracy (in%)"
+
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="notgood_percentage_r"
+                header="Remaining data NotGood Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="good_percentage_s"
+                header="selected data Good Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="notgood_percentage_s"
+                header="selected data NotGood Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
+             
+             
+             
               
               <Column
                 
@@ -753,25 +830,56 @@ const attributeSelected = ()=>{
         <Modal.Body>
         <DataTable
               value={tableData}
-              style={{marginTop:"10px",marginLeft:"10px",width:"60%",border:"1px solid black",marginBottom:"20px" }}
+              style={{marginTop:"10px",marginLeft:"10px",width:"100%",border:"1px solid black",marginBottom:"20px" }}
               tableStyle={{ minWidth: "5rem" }}
             >
+              <Column
+                field="file_name"
+                header="FileName"
+                style={{ width: "25%" }}
+              ></Column>
               <Column
                 field="confidence_level"
                 header="Confidence Level(in%)"
                 style={{ width: "25%" }}
               ></Column>
-              <Column
-                field="good_percentage"
-                header="Good Percentage (in%)"
+               <Column
+                field="created_date"
+                header="Created At"
+                style={{ width: "25%" }}
+              ></Column>
+               <Column
+                field="low_bound"
+                header="Lower Bound"
                 style={{ width: "25%" }}
               ></Column>
               <Column
-                field="bad_percentage"
-                header="Bad Percentage (in%)"
+                field="high_bound"
+                header="High Bound"
                 style={{ width: "25%" }}
               ></Column>
-              
+
+              <Column
+                field="good_percentage_r"
+                header="Remaining data Good Accuracy (in%)"
+
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="notgood_percentage_r"
+                header="Remaining data NotGood Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="good_percentage_s"
+                header="selected data Good Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
+              <Column
+                field="notgood_percentage_s"
+                header="selected data NotGood Accuracy (in%)"
+                style={{ width: "25%" }}
+              ></Column>
             </DataTable>
         </Modal.Body>
         <Modal.Footer>
