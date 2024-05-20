@@ -101,7 +101,7 @@ const Lab = styled.div`
   margin-bottom:10px;
   margin-top:10px;
 `;
-const StateFormat = () => {
+const RailwayCode = () => {
   const [source, setSource] = useState([]);
   const [target, setTarget] = useState([]);
   const [selectedFilename, setSelectedFilename] = useState("");
@@ -271,4 +271,4 @@ const StateFormat = () => {
         )
 }
 
-        export default StateFormat
+        export default RailwayCode

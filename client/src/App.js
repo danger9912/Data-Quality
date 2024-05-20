@@ -34,10 +34,6 @@ function App() {
         <Route path="/temporalval" element={<TemporalVal />} />
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyNumber />} />
-        <Route path="/pincode" element={<Pincodeformate/>}/>
-        <Route path="/state" element={<StateFormat/>}/>
-        <Route path="/unionterr" element={<UnionTerritoriesFormat/>}/>
-        <Route path="/district" element={<DistrictFormat/>}/>
         <Route path="/Quantitative" element={<AccuracyInteger/>}/>
       </Routes>
      </BrowserRouter>
