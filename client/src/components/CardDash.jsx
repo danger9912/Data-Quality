@@ -62,7 +62,7 @@ const CardDash = ({
     Omission: "/omission",
     Comission: "/comission",
     "Format Consistency": "/formatconsistency",
-   
+    "Quantitative Attribute Correctness":"/Quantitative",
     "Domain Consistency": "/domainconsistency",
     "Temporal validity":"/temporalval",
     "Accuracy of Time Measurement":"/activemeasurement" 

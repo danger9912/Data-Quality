@@ -18,6 +18,9 @@ const stationCodeRoute = require('./routes/stationCodeRouter')
 const stateFormatRoute =require('./routes/stateFormatRoute');
 const  unionTerrFormatRoute =require('./routes/unionTerrFormatRoute');
 const  districtFormatRoute =require('./routes/districtFormatRouter');
+const  accuracyNumberRoutes =require('./routes/accuracyNumberRoutes');
+const  railwayZonesRoutes =require('./routes/railwayRoutes');
+const  LatlongRoutes =require('./routes/railwayRoutes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -37,6 +40,9 @@ app.use('/api/stationCode', stationCodeRoute);
 app.use('/api/state',stateFormatRoute);
 app.use('/api/union',unionTerrFormatRoute);
 app.use('/api/district',districtFormatRoute);
+app.use('/api/accuracynumber',accuracyNumberRoutes);
+app.use('/api/railway',railwayZonesRoutes);
+app.use('/api/latlong',LatlongRoutes);
 
 
 

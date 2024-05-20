@@ -680,7 +680,7 @@ const attributeSelected = ()=>{
                       {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
-                        <>Bad</>
+                        <>NotGood</>
                       )}
                     </TableCell>
                   </TableBodyRow>
@@ -726,7 +726,7 @@ const attributeSelected = ()=>{
                       {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
-                        <>Bad</>
+                        <>NotGood</>
                       )}
                     </TableCell>
                   </TableBodyRow>
