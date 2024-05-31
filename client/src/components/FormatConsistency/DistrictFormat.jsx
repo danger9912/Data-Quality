@@ -1,15 +1,16 @@
 // import React from 'react'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from "axios";
-import Swal from 'sweetalert2';
-import { Modal, Button, Table, Spinner } from "react-bootstrap";
-import * as XLSX from "xlsx";
-import * as FileSaver from "file-saver";
+// import Swal from 'sweetalert2';
+// import { Modal, Button, Table, Spinner } from "react-bootstrap";
+import {Button } from "react-bootstrap";
+// import * as XLSX from "xlsx";
+// import * as FileSaver from "file-saver";
 import { PickList } from "primereact/picklist";
 import styled from 'styled-components';
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+// import { DataTable } from "primereact/datatable";
+// import { Column } from "primereact/column";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const TableWrapper = styled.div`
   max-height: 450px; /* Set the height you want for the scrollable area */
@@ -25,10 +26,10 @@ const MainContainer = styled.div`
  
 `;
 
-const SectionContainer = styled.div`
-  // width: 19%;
-  margin-right:15px;
-`;
+// const SectionContainer = styled.div`
+//   // width: 19%;
+//   margin-right:15px;
+// `;
 
 const DataContainer = styled.div`
   position: relative;
@@ -39,20 +40,20 @@ const DataContainer = styled.div`
 
 `;
 
-const Dropdown = styled.select`
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  width:150px;
-  margin-bottom:10px
-`;
+// const Dropdown = styled.select`
+//   padding: 10px;
+//   font-size: 16px;
+//   border-radius: 8px;
+//   width:150px;
+//   margin-bottom:10px
+// `;
 
-const Option = styled.option`
-  padding: 10px;
-  font-size: 16px;
+// const Option = styled.option`
+//   padding: 10px;
+//   font-size: 16px;
  
-  border-radius: 8px;
-`;
+//   border-radius: 8px;
+// `;
 
 const Table1 = styled.table`
   width: 100%;
@@ -85,13 +86,13 @@ const TableBodyRow = styled.tr`
   }
 `;
 
-const ErrorLabel = styled.div`
-  background-color: #ff4d4d;
-  color: white;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
-`;
+// const ErrorLabel = styled.div`
+//   background-color: #ff4d4d;
+//   color: white;
+//   padding: 10px;
+//   font-size: 15px;
+//   border-radius: 8px;
+// `;
 const Lab = styled.div`
   background-color: red;
   color: black;
@@ -106,12 +107,12 @@ const DistrictFormat = () => {
   const [target, setTarget] = useState([]);
   const [selectedFilename, setSelectedFilename] = useState("");
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [tableData, setTableData] = useState([]);
+  // const [showModal, setShowModal] = useState(false);
+  // const [tableData, setTableData] = useState([]);
   const [incorrect, setincorrect] = useState('');
-  const [responseData, setResponseData] = useState([]);
-  const [keys, setKeys] = useState([]);
-const [Ref , setRef] =useState(false);
+//   const [responseData, setResponseData] = useState([]);
+//   const [keys, setKeys] = useState([]);
+// const [Ref , setRef] =useState(false);
 const handleFileChange = async (event) => {
   const selectedFile = event.target.files[0];
   const formData = new FormData();
@@ -173,7 +174,7 @@ const fetchStationCode = async () => {
   }
 };
 const onChange = (e) => {
-  const { source, target } = e;
+  // const { source, target } = e;
 
   // Check if exactly one item is selected in the target list
   if (target.length === 1) {

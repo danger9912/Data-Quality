@@ -14,7 +14,7 @@ const ErrorModal = ({ show, onHide, fullscreen, data , filename }) => {
     const worksheet = workbook.addWorksheet("Sheet1");
 
     // Add header row
-    const headerRow = worksheet.addRow(Object.keys(data[0]).filter((key) => key !== "domainErrors"));
+    // const headerRow = worksheet.addRow(Object.keys(data[0]).filter((key) => key !== "domainErrors"));
 
     // Apply header row styles
     // headerRow.eachCell((cell) => {

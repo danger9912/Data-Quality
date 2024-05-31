@@ -8,10 +8,11 @@ import axios from "axios";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DownloadIcon from "@mui/icons-material/Download";
-import * as XLSX from "xlsx";
-import * as FileSaver from "file-saver";
-import { Modal, Button, Table, Spinner } from "react-bootstrap";
+// import DownloadIcon from "@mui/icons-material/Download";
+// import * as XLSX from "xlsx";
+// import * as FileSaver from "file-saver";
+// import { Modal, Button, Table, Spinner } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import ErrorModal from "./ErrorModal";
 import "./Omission.css";
 
@@ -28,7 +29,7 @@ const DomainConsistency = () => {
   const [totalrow, setTotalRow] = useState([]);
   const [domain, setDomain] = useState([]);
   const [domainData, setDomainData] = useState({});
-  const [selectedIds, setSelectedIds] = useState([]);
+  // const [selectedIds, setSelectedIds] = useState([]);
   const [saveData, setSaveData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [responseData, setResponseData] = useState(null);
@@ -350,22 +351,22 @@ const DomainConsistency = () => {
     }
   };
 
-  const downloadTableData = () => {
-    // Create a new workbook
-    const wb = XLSX.utils.book_new();
-    // Convert table data to worksheet
-    const ws = XLSX.utils.json_to_sheet(responseData);
-    // Add worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Data");
-    // Generate Excel file buffer
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    // Convert buffer to blob
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-    // Save file using FileSaver.js
-    console.log(downloadedFileName.split(".")[0]);
+  // const downloadTableData = () => {
+  //   // Create a new workbook
+  //   const wb = XLSX.utils.book_new();
+  //   // Convert table data to worksheet
+  //   const ws = XLSX.utils.json_to_sheet(responseData);
+  //   // Add worksheet to the workbook
+  //   XLSX.utils.book_append_sheet(wb, ws, "Data");
+  //   // Generate Excel file buffer
+  //   const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  //   // Convert buffer to blob
+  //   const blob = new Blob([wbout], { type: "application/octet-stream" });
+  //   // Save file using FileSaver.js
+  //   console.log(downloadedFileName.split(".")[0]);
 
-    FileSaver.saveAs(blob, `${downloadedFileName.split(".")[0]}.xlsx`);
-  };
+  //   FileSaver.saveAs(blob, `${downloadedFileName.split(".")[0]}.xlsx`);
+  // };
 
   useEffect(() => {
     fetchData();

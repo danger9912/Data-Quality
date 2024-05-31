@@ -4,7 +4,7 @@ import * as XLSX from "xlsx"; // Import XLSX library
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { Modal, Button } from 'react-bootstrap';
-import { Modal, Button, Table, Spinner } from "react-bootstrap";
+import { Modal, Button, Table } from "react-bootstrap";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const YourComponent = () => {

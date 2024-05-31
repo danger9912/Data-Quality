@@ -7,7 +7,7 @@ import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DownloadIcon from "@mui/icons-material/Download";
+// import DownloadIcon from "@mui/icons-material/Download";
 import "./Omission.css";
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
 
@@ -35,7 +35,7 @@ const Omission = () => {
   const [sendingFieldNames, setSendingFieldNames] = useState(false);
   const [savingData, setSavingData] = useState(false);
   const [deletingLogs, setDeletingLogs] = useState(false);
-  const [downloadingData, setDownloadingData] = useState(false);
+  // const [downloadingData, setDownloadingData] = useState(false);
 
   let sendField = [];
 
@@ -168,7 +168,7 @@ const Omission = () => {
 
   const viewData = async (filename) => {
     try {
-      setDownloadingData(true);
+      // setDownloadingData(true);
       const response = await axios.get(
         `http://localhost:3001/api/view/${filename}`
       );
@@ -179,7 +179,7 @@ const Omission = () => {
     } catch (error) {
       console.log("Error fetching data:", error);
     } finally {
-      setDownloadingData(false);
+      // setDownloadingData(false);
     }
   };
 
