@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PickList } from "primereact/picklist";
 import axios from "axios";
-import Table from "react-bootstrap/Table";
 
 const TemporalVal = () => {
   const [source, setSource] = useState([]);
