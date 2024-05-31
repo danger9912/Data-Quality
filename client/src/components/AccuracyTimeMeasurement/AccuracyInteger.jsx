@@ -574,7 +574,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date</TableHeader>
+                  <TableHeader>Number</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>
@@ -620,7 +620,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date</TableHeader>
+                  <TableHeader>Number</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>

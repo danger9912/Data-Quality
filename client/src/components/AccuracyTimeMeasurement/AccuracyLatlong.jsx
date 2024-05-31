@@ -118,6 +118,8 @@ const AccuracyTime = () => {
   const [notRandData, setNotRandData] = useState([]);
   const [confidenceLevel, setConfidenceLevel] = useState('0.50');
   const [limits, setLimits] = useState([]);
+  const [limitsLong, setLimitsLong] = useState([]);
+  const [randDataLong , setRandDataLong] = useState([]);
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [tableData, setTableData] =useState([]);
@@ -177,24 +179,19 @@ const AccuracyTime = () => {
   // }, [selectedFilename]);
 
   useEffect(() => {
-    console.log("178")
-    const dashCount = data.filter(item => item.originalData === '-').length;
+    // console.log("178")
+    const dashCount = data.filter(item => item.isValid === false).length;
     const totalCount = data.length;
     const percentage = (dashCount / totalCount) * 100;
     setErrorPercentage(parseFloat(percentage.toFixed(4)));
   }, [data]);
 
   useEffect(() => {
-    const filtered = data.filter(item => {
-      const dashCount = item.originalData === '-' ? 1 : 0;
-      const totalCount = 1;
-      const percentage = (dashCount / totalCount) * 100;
-      return percentage <= parseInt(selectedErrorOption);
-    });
+    const filtered = data.filter(item => item.isValid === true);
     setFilteredData(filtered);
-  }, [data, selectedErrorOption]);
+  }, [data]);
   useEffect(() => {
-    console.log("194")
+    // console.log("194")
     const notRand =filteredData.filter(item => !randData.includes(item));
     setNotRandData(notRand);
   }, [randData, filteredData,confidenceLevel]);
@@ -238,14 +235,14 @@ const AccuracyTime = () => {
   },[Ref])
   useEffect(()=>{
     console.log("221")
-    setLimits(calculateConfidenceInterval(randData, confidenceLevel));
+    setLimitsLong(calculateConfidenceIntervalforLong(randData, confidenceLevel));
   },[confidenceLevel, randData])
 
 
 
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/accuracymeasurement/getallcols', {
+      const response = await axios.post('http://localhost:3001/api/accuracylatlong/getallcols', {
         filename: selectedFilename,
         attributes: target,
       });
@@ -256,7 +253,7 @@ const AccuracyTime = () => {
   };
   const fetchtableData = async ()=>{
     try{
-      const response = await axios.post('http://localhost:3001/api/accuracymeasurement/getlogs');
+      const response = await axios.post('http://localhost:3001/api/accuracynumber/getlogs');
       // console.log("hi")
       setTableData(response.data);
     }
@@ -278,7 +275,21 @@ const AccuracyTime = () => {
   };
 // const mean =0;
   const calculateConfidenceInterval = (numbers, confidenceLevel) => {
-    const dates = numbers.map(item => item.originalData);
+    const dates = numbers.map(item => item.latitude);
+     const mean = calculateMean(dates);
+    //  console.log(mean);
+     setMean(mean);
+    const standardDeviation = calculateStandardDeviation(dates);
+    const sampleSize = dates.length;
+    const standardError = standardDeviation / Math.sqrt(sampleSize);
+    const zScore = zScoreLookup(confidenceLevel);
+    const marginOfError = zScore * standardError;
+    const lowerLimit = mean - marginOfError;
+    const upperLimit = mean + marginOfError;
+    return [parseFloat(lowerLimit.toFixed(3)), parseFloat(upperLimit.toFixed(3))];
+  };
+  const calculateConfidenceIntervalforLong = (numbers, confidenceLevel) => {
+    const dates = numbers.map(item => item.longitude);
      const mean = calculateMean(dates);
     //  console.log(mean);
      setMean(mean);
@@ -343,7 +354,7 @@ const AccuracyTime = () => {
     console.log(d)
    
       try {
-        const response = await axios.post('http://localhost:3001/api/accuracymeasurement/insertlog', d);
+        const response = await axios.post('http://localhost:3001/api/accuracynumber/insertlog', d);
         // Show success message using SweetAlert
         Swal.fire({
           icon: 'success',
@@ -401,109 +412,16 @@ const downloadTableData = () => {
 
 
 };
-function jsonToExcel() {
-  // Convert JSON to CSV format
-  const csvData = convertJsonToCsv(tableData);
 
-  // Convert CSV to Blob object
-  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
 
-  // Create download link
-  const downloadLink = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  downloadLink.setAttribute('href', url);
-  downloadLink.setAttribute('download', `download.csv`);
 
-  // Trigger download
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-
-  // Clean up
-  document.body.removeChild(downloadLink);
-  URL.revokeObjectURL(url);
-}
-function jsonToODS() {
-  // Convert JSON to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(tableData);
-
-  // Create workbook
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
-  // Write workbook to binary string
-  const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'ods' });
-
-  // Convert binary string to Blob
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.oasis.opendocument.spreadsheet' });
-
-  // Create download link
-  const downloadLink = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  downloadLink.setAttribute('href', url);
-  downloadLink.setAttribute('download', `download.ods`);
-
-  // Trigger download
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-
-  // Clean up
-  document.body.removeChild(downloadLink);
-  URL.revokeObjectURL(url);
-}
-function convertJsonToCsv(jsonData) {
-  // Convert JSON to CSV format
-  const csvRows = [];
-  const keys = Object.keys(jsonData[0]);
-  csvRows.push(keys.join(','));
-
-  for (const row of jsonData) {
-    const values = keys.map(key => row[key]);
-    csvRows.push(values.join(','));
-  }
-
-  return csvRows.join('\n');
-}
-
-function jsonToXLS() {
-  // Convert JSON to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(tableData);
-
-  // Create workbook
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
-  // Write workbook to binary string
-  const excelBuffer = XLSX.write(workbook, { type: 'array', bookType: 'xls' });
-
-  // Convert binary string to Blob
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.ms-excel' });
-
-  // Create download link
-  const downloadLink = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  downloadLink.setAttribute('href', url);
-  downloadLink.setAttribute('download', `download.xls`);
-
-  // Trigger download
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-
-  // Clean up
-  document.body.removeChild(downloadLink);
-  URL.revokeObjectURL(url);
-}
 
 const onChange = (e) => {
-  const { source, target } = e;
-  
-  // Check if exactly one item is selected in the target list
-  if (target.length === 1) {
-    setTarget(target);
-  } else {
-    // If not exactly one item is selected, keep only the last selected item
-    setTarget(target.length > 1 ? [target[target.length - 1]] : []);
-  }
-};
+    const { source, target } = e;
+
+    // Limit the target list to the last two selected items
+    setTarget(target.slice(-2));
+  };
 
 const attributeSelected = ()=>{
   fetchData();
@@ -512,7 +430,7 @@ const attributeSelected = ()=>{
 
   return (
     <>
-      <h2>Accuracy of Time Measurement</h2>
+      <h2> Lat-Long Measurement</h2>
       <center>
         <input
           style={{
@@ -561,7 +479,8 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date(YYYY-MM-DD)</TableHeader>
+                  <TableHeader>Latitude</TableHeader>
+                  <TableHeader>Longitude</TableHeader>
                   <TableHeader>Status</TableHeader>
                 </tr>
               </thead>
@@ -569,8 +488,9 @@ const attributeSelected = ()=>{
                 {data.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.convertedData}</TableCell>
-                    <TableCell>{item.originalData === '-' ? "Invalid" : "Valid"}</TableCell>
+                    <TableCell>{item.latitude}</TableCell>
+                    <TableCell>{item.longitude}</TableCell>
+                    <TableCell>{item.isValid === true ? "true" : "false"}</TableCell>
                   </TableBodyRow>
                 ))} 
               </tbody>
@@ -588,18 +508,20 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date(YYYY-MM-DD)</TableHeader>
-                  {/* <TableHeader>Number</TableHeader> */}
+                  <TableHeader>Latitude</TableHeader>
+                  <TableHeader>Longitude</TableHeader>
+                  {/* <TableHeader>Status</TableHeader> */}
                 </tr>
               </thead>
               <tbody>
                 {filteredData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.convertedData}</TableCell>
-                    {/* <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell> */}
+                    <TableCell>{item.latitude}</TableCell>
+                    <TableCell>{item.longitude}</TableCell>
+                    {/* <TableCell>{item.isValid === true ? "true" : "false"}</TableCell> */}
                   </TableBodyRow>
-                ))}
+                ))} 
               </tbody>
             </Table1>
             </TableWrapper>
@@ -618,16 +540,16 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date(YYYY-MM-DD)</TableHeader>
-                  {/* <TableHeader>Number</TableHeader> */}
+                  {/* <TableHeader>Date(YYYY-MM-DD)</TableHeader> */}
+                  <TableHeader>Number</TableHeader>
                 </tr>
               </thead>
               <tbody>
                 {randData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.convertedData}</TableCell>
-                    {/* <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell> */}
+                    {/* <TableCell>{item.convertedData}</TableCell> */}
+                    <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell>
                   </TableBodyRow>
                 ))}
               </tbody>
@@ -675,12 +597,12 @@ const attributeSelected = ()=>{
                 {randData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.convertedData === '-' ? "---" : item.convertedData}</TableCell>
+                    <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell>
                     <TableCell>
                       {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
-                        <>NotGood</>
+                        <>Not Good</>
                       )}
                     </TableCell>
                   </TableBodyRow>
@@ -702,7 +624,7 @@ const attributeSelected = ()=>{
                 
                
             <strong>Good Accuracy: </strong>{parseFloat((good / (bad + good) * 100).toFixed(2))}%<br></br>
-            <strong>Not Good Accuracy: </strong>{parseFloat((bad / (bad + good) * 100).toFixed(2))}%
+            <strong>Not good Accuracy: </strong>{parseFloat((bad / (bad + good) * 100).toFixed(2))}%
             </Lab>
             <TableWrapper
               style={{ 
@@ -721,12 +643,12 @@ const attributeSelected = ()=>{
                 {notRandData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.convertedData === '-' ? "---" : item.convertedData}</TableCell>
+                    <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell>
                     <TableCell>
                       {item.originalData >= limits[0] && item.originalData <= limits[1] ? (
                         <>Good</>
                       ) : (
-                        <>NotGood</>
+                        <>Not Good</>
                       )}
                     </TableCell>
                   </TableBodyRow>
@@ -886,15 +808,7 @@ const attributeSelected = ()=>{
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Close
           </Button>
-          <Button variant="primary" onClick={jsonToExcel}>
-           Download CSV
-        </Button>
-          <Button variant="primary" onClick={jsonToODS}>
-           Download ODS
-        </Button>
-          <Button variant="primary" onClick={jsonToXLS}>
-           Download xls
-        </Button>
+         
           <Button variant="primary" onClick={downloadTableData}>
            Download xlsx
         </Button>

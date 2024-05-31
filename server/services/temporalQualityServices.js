@@ -9,6 +9,7 @@ const temporalQualityServices = {
         const data = await fs.readFile(filePath, 'utf8');
         const jsonArray = JSON.parse(data);
         const result = temporalValidity(body.attributes, jsonArray);
+        
         return result;
     },
 };

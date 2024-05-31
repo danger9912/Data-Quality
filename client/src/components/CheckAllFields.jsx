@@ -101,7 +101,7 @@ const Lab = styled.div`
   margin-bottom:10px;
   margin-top:10px;
 `;
-const StateFormat = () => {
+const CheckAllFields = () => {
   const [source, setSource] = useState([]);
   const [target, setTarget] = useState([]);
   const [selectedFilename, setSelectedFilename] = useState("");
@@ -112,6 +112,52 @@ const StateFormat = () => {
   const [responseData, setResponseData] = useState([]);
   const [keys, setKeys] = useState([]);
   const [Ref, setRef] = useState(false);
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
+  const [data2, setData2] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [dropdownValues, setDropdownValues] = useState([]);
+
+  const handleReverseGeocoding = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+      const result = await response.json();
+
+      if (result) {
+        const { place_id, class: place_class, type, place_rank, addressType, railway, road, village, state, state_district, county, postcode, country, country_code } = result;
+
+        const values = [
+          { label: 'Place ID', value: place_id },
+          { label: 'Class', value: place_class },
+          { label: 'Type', value: type },
+          { label: 'Place Rank', value: place_rank },
+          { label: 'Address Type', value: addressType },
+          { label: 'Railway Name', value: railway },
+          { label: 'Road', value: road },
+          { label: 'Village', value: village },
+          { label: 'State', value: state },
+          { label: 'District', value: state_district || county },
+          { label: 'Postcode', value: postcode },
+          { label: 'Country', value: country },
+          { label: 'Country Code', value: country_code }
+        ];
+
+        setDropdownValues(values.filter(item => item.value)); // Filter out empty values
+        console.log(result)
+        setData2(result.address);
+        setError('');
+      } else {
+        setError('Location not found.');
+      }
+    } catch (err) {
+      setError('Error occurred while fetching location details.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     const formData = new FormData();
@@ -174,20 +220,17 @@ const StateFormat = () => {
   }
   const onChange = (e) => {
     const { source, target } = e;
-
-    // Check if exactly one item is selected in the target list
     if (target.length === 1) {
       setTarget(target);
     } else {
-      // If not exactly one item is selected, keep only the last selected item
       setTarget(target.length > 1 ? [target[target.length - 1]] : []);
     }
   };
 
   return (
-    <div>
-      <h2>State Format</h2>
-      <center>
+    <>
+ 
+    <center>
         <input
           style={{
             height: "40px",
@@ -231,52 +274,59 @@ const StateFormat = () => {
 
         <Button onClick={attributeSelected} style={{ marginBottom: "50px" }}>start Test</Button>
       </center>
-      <MainContainer>
-        <div style={{ display: "flex" }}>
-          {data.length !== 0 ?
-            <DataContainer
-              style={{ marginTop: "42px" }}
-            >
-              <div style={{ display: "flex" }}>
-                <h4>Filter Table</h4>
-                {/* <button1 style={{ backgroundColor: "#4CAF50", border: "none", color: "white", padding: "10px 20px", fontSize: "15px", cursor: "pointer", borderRadius: "8px", marginLeft: "290px" }} onClick={handleSave}>Save</button1> */}
-
-              </div>
-
-              <Lab>
-
-
-
-                <strong>Error Percentage: </strong>{incorrect}%<br></br>
-
-              </Lab>
-              <TableWrapper>
-                <Table1>
-                  <thead>
-                    <tr>
-                      <TableHeader>Sr No.</TableHeader>
-                      <TableHeader>States</TableHeader>
-                      <TableHeader>Valid/Invalid</TableHeader>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((item, index) => (
-                      <TableBodyRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{item?.state}</TableCell>
-                        <TableCell>{item?.valid}</TableCell>
-                      </TableBodyRow>
-                    ))}
-                  </tbody>
-                </Table1>
-              </TableWrapper>
-            </DataContainer>
-            : <></>}
-            </div>
-            </MainContainer>
+      <div className="app">
+      <header>
+        <h1>Geolocation Finder</h1>
+      </header>
+      <main>
+        <div className="coordinate-input">
+          <h2>Enter Coordinates</h2>
+          <input
+            type="text"
+            placeholder="Enter latitude"
+            value={lat}
+            onChange={(e) => setLat(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter longitude"
+            value={lon}
+            onChange={(e) => setLon(e.target.value)}
+          />
+          <button onClick={handleReverseGeocoding}>Find Location</button>
         </div>
-       
-        )
+        {loading && <div className="loader">Loading...</div>}
+        {error && <div className="error">{error}</div>}
+        {data2 && (
+          <div className="results">
+            <h2>Location Information</h2>
+            <p><strong>Country:</strong> {data2.country}</p>
+            <p><strong>State:</strong> {data2.state}</p>
+            {data2.state_district && <p><strong>State District:</strong> {data2.state_district}</p>}
+            {data2.county && <p><strong>County:</strong> {data2.county}</p>}
+            {data2.city && <p><strong>City:</strong> {data2.city}</p>}
+            {data2.town && <p><strong>Town:</strong> {data2.town}</p>}
+            {data2.village && <p><strong>Village:</strong> {data2.village}</p>}
+
+            <div className="dropdowns">
+              <label>
+                Select Information:
+                <select>
+                  <option value="">Select</option>
+                  {dropdownValues.map((item, index) => (
+                    <option key={index} value={item.value}>
+                      {item.label}: {item.value}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+      </>
+  )
 }
 
-        export default StateFormat
+export default CheckAllFields

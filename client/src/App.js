@@ -18,6 +18,11 @@ import UnionTerritoriesFormat from "./components/FormatConsistency/UnionTerritor
 import DistrictFormat from "./components/FormatConsistency/DistrictFormat";
 import AccuracyInteger from "./components/AccuracyTimeMeasurement/AccuracyInteger"
 import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime"
+import ThematicClassfication from "./components/ThematicClassfication";
+import NonQuantitative from "./components/NonQuantitative";
+import CheckAllFields from "./components/CheckAllFields";
+import UserDefined from "./components/UserDefined";
+//  "./components/ThematicClassfication"
 function App() {
   return (
     <BrowserRouter>
@@ -34,7 +39,11 @@ function App() {
         <Route path="/temporalval" element={<TemporalVal />} />
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyNumber />} />
-        <Route path="/Quantitative" element={<AccuracyInteger/>}/>
+        <Route path="/Quantitative" element={<Main/>}/>
+        <Route path="/ThematicClassification" element={<ThematicClassfication/>}/>
+        <Route path="/nonquantitative" element={<NonQuantitative/>}/>
+        <Route path="/checkallfields" element={<CheckAllFields/>}/>
+        <Route path="/userdefined" element={<UserDefined/>}/>
       </Routes>
      </BrowserRouter>
   );

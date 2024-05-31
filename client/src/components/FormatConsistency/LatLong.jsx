@@ -14,7 +14,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 const TableWrapper = styled.div`
   max-height: 450px; /* Set the height you want for the scrollable area */
   overflow-y: auto;
-  width:500px;
+  width:800px;
   height:550px;
   border: 1px solid #ccc; /* Add border to TableWrapper */
   border-radius: 10px;
@@ -157,13 +157,14 @@ const StateFormat = () => {
   }
   const fetchStationCode = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/state/check',
+      const response = await axios.post('http://localhost:3001/api/latlong/getallcols',
         {
           filename: selectedFilename,
           attributes: target,
         }
       )
-      console.log(response.data)
+      console.log("***")
+      console.log(response.data[0])
       setData(response.data.data);
 
 
@@ -175,13 +176,8 @@ const StateFormat = () => {
   const onChange = (e) => {
     const { source, target } = e;
 
-    // Check if exactly one item is selected in the target list
-    if (target.length === 1) {
-      setTarget(target);
-    } else {
-      // If not exactly one item is selected, keep only the last selected item
-      setTarget(target.length > 1 ? [target[target.length - 1]] : []);
-    }
+    // Limit the target list to the last two selected items
+    setTarget(target.slice(-2));
   };
 
   return (
@@ -205,27 +201,36 @@ const StateFormat = () => {
         <br />
         <Button onClick={fetchFieldNames}>Read Dataset</Button>
 
-        <div style={{ flex: "1", marginRight: "50px", marginLeft: "50px", marginTop: "20px" }}>
-
-          <PickList
-            source={source}
-            target={target}
-            itemTemplate={(item) => item.label}
-            sourceHeader="Available Attribute Headings"
-            targetHeader="Data Product Specification"
-            showSourceControls={false}
-            showTargetControls={false}
-            sourceStyle={{ height: "300px" }}
-            targetStyle={{ height: "300px" }}
-            onChange={onChange}
-          />
-        </div>
+        <div
+            style={{
+              marginTop: "1%",
+              width: "70%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <div style={{ flex: "1", marginRight: "10px" }}>
+              <PickList
+                source={source}
+                target={target}
+                itemTemplate={(item) => item.label}
+                sourceHeader="Available Attribute Headings"
+                targetHeader="Data Product Specification"
+                showSourceControls={false}
+                showTargetControls={false}
+                sourceStyle={{ height: "300px" }}
+                targetStyle={{ height: "300px" }}
+                onChange={onChange}
+              />
+            </div>
+          </div>
 
         <Button onClick={attributeSelected} style={{ marginBottom: "50px" }}>start Test</Button>
       </center>
       <MainContainer>
         <div style={{ display: "flex" }}>
-          {data.length !== 0 ?
+          {data?.length !== 0 ?
             <DataContainer
               style={{ marginTop: "42px" }}
             >
@@ -247,16 +252,23 @@ const StateFormat = () => {
                   <thead>
                     <tr>
                       <TableHeader>Sr No.</TableHeader>
-                      <TableHeader>States</TableHeader>
-                      <TableHeader>Valid/Invalid</TableHeader>
+                      <TableHeader>latitude</TableHeader>
+                      <TableHeader>longitude</TableHeader>
+                      <TableHeader>Valid</TableHeader>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
+                    {data?.map((item, index) => (
                       <TableBodyRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{item?.state}</TableCell>
-                        <TableCell>{item?.valid}</TableCell>
+                        <TableCell>{item?.latitude}</TableCell>
+                        <TableCell>{item?.longitude}</TableCell>
+                        <TableCell>{item?.isValid === true ? 
+                        
+                        "Valid" :
+                        
+                        
+                        "Not Valid"}</TableCell>
                       </TableBodyRow>
                     ))}
                   </tbody>

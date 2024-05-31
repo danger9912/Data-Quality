@@ -110,19 +110,29 @@ const FormatConsistency = () => {
           <h2 style={{marginTop:"10px"}}>Primary Key Constraint</h2>
           <input className="form-control uploadBtnInput" id="formFile" style={{ height: "2.5%", width: "355px",marginTop:"10px" }} onChange={handleFileChange} type="file" />
           <button type="button" className="btn btn-primary" onClick={fetchFieldNames} style={{marginTop:"10px"}}>Start Test</button>
-          <div style={{ marginTop: "1%", width: "70%" }}>
-            <PickList
-              source={source}
-              target={target}
-              itemTemplate={(item) => item.label}
-              sourceHeader="Available Attribute Headings"
-              targetHeader="Data Product Specification"
-              showSourceControls={false}
-              showTargetControls={false}
-              sourceStyle={{ height: "300px" }}
-              targetStyle={{ height: "300px" }}
-              onChange={onChange}
-            />
+          <div
+            style={{
+              marginTop: "1%",
+              width: "70%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <div style={{ flex: "1", marginRight: "10px" }}>
+              <PickList
+                source={source}
+                target={target}
+                itemTemplate={(item) => item.label}
+                sourceHeader="Available Attribute Headings"
+                targetHeader="Data Product Specification"
+                showSourceControls={false}
+                showTargetControls={false}
+                sourceStyle={{ height: "300px" }}
+                targetStyle={{ height: "300px" }}
+                onChange={onChange}
+              />
+            </div>
           </div>
           <button className="btn btn-primary mt-3" onClick={sendFieldNames} disabled={target.length === 0}>Check Validity</button>
         </center>

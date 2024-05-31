@@ -1,12 +1,14 @@
 import React from 'react'
 import { useState,useEffect } from 'react';
 
-import AccuracyTime from './AccuracyTime';
-import AccuracyNumber from './AccuracyInteger';
+import AccuracyTime from './AccuracyInteger';
+import AccuracyHeight from './AccuracyInteger';
+import AccuracyNumber from './AccuracyLatlong';
 
 const FormatConsist = () => {
-    const [number, setNumber] = useState(0);
+    const [height, setHeight] = useState(0);
     const [date, setDate] = useState(1);
+    const [number,setNumber ] = useState(0);
 
    
     
@@ -17,6 +19,7 @@ const FormatConsist = () => {
             onClick={() => {    
                 setNumber(0);
                 setDate(1);
+                setHeight(0);
                
             }}
             style={{
@@ -30,12 +33,13 @@ const FormatConsist = () => {
               cursor: 'pointer',
             }}
           >
-            Date 
+            Lat - Long 
           </button>
           <button
              onClick={() => {    
                 setNumber(1);
                 setDate(0);
+                setHeight(0);
                
             }}
             style={{
@@ -50,11 +54,32 @@ const FormatConsist = () => {
           >
             Number
           </button>
+
+          <button
+             onClick={() => {    
+                setNumber(0);
+                setDate(0);
+                setHeight(1);
+               
+            }}
+            style={{
+              padding: '10px 20px',
+              marginRight: '20px',
+              backgroundColor: height === 1 ? '#4CAF50' : '#ddd',
+              color: height === 1 ? '#fff' : '#000',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+            Height
+          </button>
         
           </center>
 
-          {number === 1 && <AccuracyNumber />}
-          {date === 1 && <AccuracyTime/>}
+          {number === 1 && <AccuracyTime />}
+          {date === 1 && <AccuracyNumber/>}
+          {height === 1 && <AccuracyTime/>}
         
       
     </>

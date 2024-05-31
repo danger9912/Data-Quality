@@ -10,11 +10,12 @@ const nullValue = [
 ];
 
 const calculateDomain = (rules, data) => {
-    const result = { outDomain: [], totalChecks: [], domainConsistency: 0 };
+    const result = { outDomain: [], totalChecks: [],inDomain:[], domainConsistency: 0 };
     rules.forEach((rule) => {
         const { attribute, datatype, values } = rule;
         let count = 0;
         let checkMade = 0;
+        
         data.forEach((obj) => {
             const value = obj[attribute];
             if (!nullValue.includes(value)) {
@@ -80,14 +81,17 @@ const calculateDomain = (rules, data) => {
                 }
             }
         });
-
+        // let d = ;
+        result.inDomain.push({[attribute]: checkMade - count });
         result.outDomain.push({ [attribute]: count });
         result.totalChecks.push({ [attribute]: checkMade });
     });
 
     const totalChecks = result.totalChecks.reduce((total, attributeCount) => total + Object.values(attributeCount)[0], 0);
     const inconsistentChecks = result.outDomain.reduce((total, attributeCount) => total + Object.values(attributeCount)[0], 0);
+    // const consistentChecks = result.inDomain.reduce((total, attributeCount) => total + Object.values(attributeCount)[0], 0);
     const domainConsistency = (inconsistentChecks / totalChecks) * 100;
+    // result.correct_domain = (totalChecks - inconsistentChecks);
     result.domainConsistency = parseFloat(domainConsistency).toFixed(2);
     console.log(data);
     console.log(result);

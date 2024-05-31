@@ -12,6 +12,16 @@ exports.domainConsistencyAuto = async (req, res, next) => {
     next(err);
   }
 };
+exports.domainConfusion = async (req, res, next) => {
+  try {
+    const result = await domainConsistencyServices.domainConfusion(req);
+    console.log(result);
+    res.status(200).json({ result });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
 
 exports.domainConsistencyData = async (req, res, next) => {
   try {

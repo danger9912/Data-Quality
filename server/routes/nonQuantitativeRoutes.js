@@ -1,8 +1,8 @@
-const latlongController = require('../controllers/latlongController');
+const nonQuantitativeController = require('../controllers/nonQuantitativeController');
 const express = require('express');
 const router = express.Router();
 
-router.post('/getallcols',latlongController.check);
+router.post('/check',nonQuantitativeController.check);
 // router.post('/insertlog',accuracyContoller.insertData);
 // router.post('/getlogs',accuracyContoller.getAccuracy_measure);
 // router.post('/comission-log', comissionController.createOmissionLogs);

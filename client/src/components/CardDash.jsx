@@ -65,7 +65,9 @@ const CardDash = ({
     "Quantitative Attribute Correctness":"/Quantitative",
     "Domain Consistency": "/domainconsistency",
     "Temporal validity":"/temporalval",
-    "Accuracy of Time Measurement":"/activemeasurement" 
+    "Accuracy of Time Measurement":"/activemeasurement",
+    "Thematic Classification Correctness" : "/ThematicClassification",
+    "Non-quantitative Attribute Correctness" : "/nonquantitative",
   };
 
   const borders = ["success", "danger", "info", "warning", "dark", "primary"];

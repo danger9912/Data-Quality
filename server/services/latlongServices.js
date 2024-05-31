@@ -5,110 +5,175 @@ const db = require("../database/connection");
 const fileChanges = require("../utils/fileModification");
 const XLSX = require('xlsx');
 const axios = require('axios');
-const unionTerrServices = {
-  
-    async SelectedCode(filename, attributes) {
-      const unionTerritories = [
-        "ANDAMAN AND NICOBAR ISLANDS",
-        "CHANDIGARH",
-        "DADRA AND NAGAR HAVELI AND DAMAN AND DIU",
-        "LAKSHADWEEP",
-        "DELHI",
-        "PUDUCHERRY",
-        "LADAKH",
-        "JAMMU AND KASHMIR"
-    ];
-        try {
-            // console.log(filename);
-           
 
-            console.log("hi:" +attributes);
-            // console.log(attributes[0]);
-            // console.log("-------")
-            const filePath = path.join(__dirname, "..", "uploads", filename);
-          
-            const rawData = fs.readFileSync(filePath);
-            const data = JSON.parse(rawData);
-           
-            const typ = attributes[0].value;
-           
-  
-            console.log(data);
-            console.log(typ);
-          console.log("gi" +data[2][typ]);
-          
-         
-        //       // Return the station codes as JSON
-        // console.log("Hi"+stationCodes)
-          
-        // //   let originalDate;
+const latlongServices = {
 
-        let I =0;
-        let W =0;
-        const combinedData = data.map(item => {
-            const state = item[typ];
-            
-            var valid = "valid";
 
-            if(unionTerritories.includes( item[typ].toUpperCase()) === true ){
-                 valid  = "valid";
-                 I++;
-            }
-            else{
-                valid  = "Invalid";
-                 W++;
-            }
-            // const vaild = stationCodes.includes(item[typ]) ? "Valid" : "NotValid";
-            return { state, valid };
-            // return stationCodes.includes(item[typ]);
-        });
-        
-          const comb = {data : combinedData, errorcount : W,validCount :I}
-        console.log(comb);
-        
-            return comb;
-        } catch (err) {
-            console.error("Error fetching logs:", err);
-            throw new Error("Internal Server Error");
+  async SelectedCode(filename, attributes) {
+    try {
+      var coordinateData = [];
+      console.log(filename);
+      console.log(attributes);
+      console.log(attributes[0]);
+      console.log("-------");
+      var I= 0;
+      var W =0 ;
+      const filePath = path.join(__dirname, "..", "uploads", filename);
+      const rawData = fs.readFileSync(filePath);
+      const data = JSON.parse(rawData);
+      // console.log(data)
+      const typ1 = attributes[0].value;
+      const typ2 = attributes[1].value;
+      // console.log(data[typ1])
+      function correctEncoding(str) {
+        // Check if str is a string
+        if (typeof str !== 'string') {
+          console.error("Input is not a string.");
+          return str; // Return the input unchanged
         }
-    },
-    async createLog(logData) {
-      try {
-        await db.query(
-          "INSERT INTO stationcode (filename, error_percentage,created_time) VALUES ($1, $2,$3)",
-          [logData.filename, logData.error_percentage,logData.created_time]
-        );
-        
-      } catch (error) {
-        console.error("Error creating log entry:", error);
-        throw new Error("Internal Server Error");
+      
+        return str.replace(/Ã‚Â°/g, '°')
+                  .replace(/Ã‚Â'/g, "'")
+                  .replace(/Ã‚Â"/g, '"')
+                  .replace(/Ã‚Â/g, '')
+                  .replace(/, /g, ' '); // Add 'g' flag to replace all occurrences
       }
-    },
-    async getlogs() {
-      try {
-          const result = await db.query(
-          "SELECT * FROM stationcode"
-        );
-        return result.rows;
-        
-      } catch (error) {
-        console.error("Error creating log entry:", error);
-        throw new Error("Internal Server Error");
-      }
-    },
+      
     
-    async viewFile(log) {
-        console.log(log)
-      try {
-          const result = await db.query(
-          "SELECT * FROM stationcode"
-        );
-        return result.rows;
-        
-      } catch (error) {
-        console.error("Error creating log entry:", error);
-        throw new Error("Internal Server Error");
+      
+      
+
+      function isValidLatLongDMS(dmsLat, dmsLong) {
+        function dmsToDecimal(degrees, minutes, seconds, direction) {
+          let decimal = degrees + minutes / 60 + seconds / 3600;
+          if (direction === "S" || direction === "W") {
+            decimal = decimal * -1;
+          }
+          return decimal;
+        }
+
+        function parseDMS(input) {
+          // Check if input is a string
+          if (typeof input !== 'string') {
+              return input;
+          }
+      
+          let parts = input.match(/(\d+)[°](\d+)'(\d+\.?\d*)"?([NSEW])/);
+          if (!parts) {
+              return null;
+          }
+          let degrees = parseInt(parts[1], 10);
+          let minutes = parseInt(parts[2], 10);
+          let seconds = parseFloat(parts[3]);
+          let direction = parts[4];
+      
+          return dmsToDecimal(degrees, minutes, seconds, direction);
       }
+
+        let latDecimal = parseDMS(dmsLat);
+        let longDecimal = parseDMS(dmsLong);
+
+        if (latDecimal === null || longDecimal === null) {
+          return false;
+        }
+
+        // Check if the latitude is between -90 and 90
+        if (latDecimal < -90 || latDecimal > 90) {
+          return false;
+        }
+
+        // Check if the longitude is between -180 and 180
+        if (longDecimal < -180 || longDecimal > 180) {
+          return false;
+        }
+
+        return true;
+      }
+
+      function processCoordinates(data) {
+          let latitudes = (data.map(item => correctEncoding(item[typ1])));
+          let longitudes = (data.map(item => correctEncoding(item[typ2])));
+
+
+        if (!latitudes || !longitudes) {
+          throw new Error("Latitude or longitude data is undefined.");
+        }
+        if (latitudes.length !== longitudes.length) {
+          throw new Error("Number of latitudes and longitudes must be equal.");
+        }
+
+        
+
+        for (let i = 0; i < latitudes.length; i++) {
+          let lat = latitudes[i];
+          let long = longitudes[i];
+          var isValid;
+          if(isValidLatLongDMS(lat, long) === true){
+             isValid = true;
+            I++;
+          }
+          else{
+             isValid = false;
+            W++;
+          }
+
+          coordinateData.push({
+            latitude: lat,
+            longitude: long,
+            isValid: isValid
+          });
+        }
+
+        // console.log(coordinateData);
+        return coordinateData
+      }
+
+      processCoordinates(data);
+      return {data:coordinateData,validCount : I,errorcount:W};
+
+    } catch (error) {
+      console.error("Error in valid entry:", error);
+      throw new Error("Internal Server Error");
     }
-  };
-  module.exports = unionTerrServices;
+  },
+
+  async createLog(logData) {
+    try {
+      await db.query(
+        "INSERT INTO stationcode (filename, error_percentage,created_time) VALUES ($1, $2,$3)",
+        [logData.filename, logData.error_percentage, logData.created_time]
+      );
+
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  },
+  async getlogs() {
+    try {
+      const result = await db.query(
+        "SELECT * FROM stationcode"
+      );
+      return result.rows;
+
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  },
+
+  async viewFile(log) {
+    console.log(log)
+    try {
+      const result = await db.query(
+        "SELECT * FROM stationcode"
+      );
+      return result.rows;
+
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  }
+};
+module.exports = latlongServices;

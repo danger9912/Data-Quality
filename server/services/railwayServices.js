@@ -9,26 +9,26 @@ const railwayService = {
   
     async SelectedCode(filename, attributes) {
 
-        const railwayZones = [
-            "CR",  // Central Railway
-            "ER",  // Eastern Railway
-            "ECR", // East Central Railway
-            "ECOR", // East Coast Railway
-            "NR",  // Northern Railway
-            "NCR", // North Central Railway
-            "NER", // North Eastern Railway
-            "NFR", // North Frontier Railway
-            "NWR", // North Western Railway
-            "SR",  // Southern Railway
-            "SCR", // South Central Railway
-            "SER", // South Eastern Railway
-            "SECR", // South East Central Railway
-            "SWR", // South Western Railway
-            "WR",  // Western Railway
-            "WCR", // West Central Railway
-            "MRK", // Metro Railway, Kolkata
-            "SCOR" // South Coast Railway
-        ];
+      const railwayZones = {
+        "CR": "Central Railway",
+        "ER": "Eastern Railway",
+        "ECR": "East Central Railway",
+        "ECOR": "East Coast Railway",
+        "NR": "Northern Railway",
+        "NCR": "North Central Railway",
+        "NER": "North Eastern Railway",
+        "NFR": "North Frontier Railway",
+        "NWR": "North Western Railway",
+        "SR": "Southern Railway",
+        "SCR": "South Central Railway",
+        "SER": "South Eastern Railway",
+        "SECR": "South East Central Railway",
+        "SWR": "South Western Railway",
+        "WR": "Western Railway",
+        "WCR": "West Central Railway",
+        "MRK": "Metro Railway, Kolkata",
+        "SCOR": "South Coast Railway"
+    };
         
         console.log(railwayZones);
         

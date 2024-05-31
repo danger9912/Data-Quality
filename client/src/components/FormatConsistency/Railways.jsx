@@ -205,21 +205,30 @@ const RailwayCode = () => {
         <br />
         <Button onClick={fetchFieldNames}>Read Dataset</Button>
 
-        <div style={{ flex: "1", marginRight: "50px", marginLeft: "50px", marginTop: "20px" }}>
-
-          <PickList
-            source={source}
-            target={target}
-            itemTemplate={(item) => item.label}
-            sourceHeader="Available Attribute Headings"
-            targetHeader="Data Product Specification"
-            showSourceControls={false}
-            showTargetControls={false}
-            sourceStyle={{ height: "300px" }}
-            targetStyle={{ height: "300px" }}
-            onChange={onChange}
-          />
-        </div>
+        <div
+            style={{
+              marginTop: "1%",
+              width: "70%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+            }}
+          >
+            <div style={{ flex: "1", marginRight: "10px" }}>
+              <PickList
+                source={source}
+                target={target}
+                itemTemplate={(item) => item.label}
+                sourceHeader="Available Attribute Headings"
+                targetHeader="Data Product Specification"
+                showSourceControls={false}
+                showTargetControls={false}
+                sourceStyle={{ height: "300px" }}
+                targetStyle={{ height: "300px" }}
+                onChange={onChange}
+              />
+            </div>
+          </div>
 
         <Button onClick={attributeSelected} style={{ marginBottom: "50px" }}>start Test</Button>
       </center>

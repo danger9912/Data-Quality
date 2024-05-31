@@ -6,6 +6,7 @@ router.post('/domain-auto', domainConsistencyController.domainConsistencyAuto);
 router.post('/domain-data',domainConsistencyController.domainConsistencyData);
 router.get('/domain-log',domainConsistencyController.getDomainLogs);
 router.post('/domain-log', domainConsistencyController.createDomainLogs);
+router.post('/domain-confusion', domainConsistencyController.domainConfusion);
 
 
 module.exports = router;

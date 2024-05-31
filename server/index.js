@@ -20,7 +20,9 @@ const  unionTerrFormatRoute =require('./routes/unionTerrFormatRoute');
 const  districtFormatRoute =require('./routes/districtFormatRouter');
 const  accuracyNumberRoutes =require('./routes/accuracyNumberRoutes');
 const  railwayZonesRoutes =require('./routes/railwayRoutes');
-const  LatlongRoutes =require('./routes/railwayRoutes');
+const  LatlongRoutes =require('./routes/latlongRoutes');
+const  accuarcyLatLongRoutes =require('./routes/accuracyLatLongRoutes');
+const  nonQuantitativeRoutes =require('./routes/nonQuantitativeRoutes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -43,6 +45,8 @@ app.use('/api/district',districtFormatRoute);
 app.use('/api/accuracynumber',accuracyNumberRoutes);
 app.use('/api/railway',railwayZonesRoutes);
 app.use('/api/latlong',LatlongRoutes);
+app.use('/api/accuracylatlong',accuarcyLatLongRoutes);
+app.use('/api/nonquantitative',nonQuantitativeRoutes);
 
 
 

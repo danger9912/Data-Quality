@@ -31,7 +31,6 @@ const Omission = () => {
   const [responseData, setResponseData] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [downloadedFileName, setDownloadedFileName] = useState("");
-
   const [fetchingFieldNames, setFetchingFieldNames] = useState(false);
   const [sendingFieldNames, setSendingFieldNames] = useState(false);
   const [savingData, setSavingData] = useState(false);

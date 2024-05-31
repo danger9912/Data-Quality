@@ -7,6 +7,7 @@ const temporalValidity = (attributes, data) => {
     data.forEach(entry => {
         attributes.forEach(attr => {
             const date = entry[attr];
+            // console.log(date)
             if (!isValidDate(date)) {
                 result[attr]++;
             }
@@ -17,6 +18,7 @@ const temporalValidity = (attributes, data) => {
 
 const isValidDate = (dateString) => {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
+    
     return regex.test(dateString);
 };
 
