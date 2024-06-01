@@ -106,58 +106,11 @@ const CheckAllFields = () => {
   const [target, setTarget] = useState([]);
   const [selectedFilename, setSelectedFilename] = useState("");
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [tableData, setTableData] = useState([]);
   const [incorrect, setincorrect] = useState('');
-  const [responseData, setResponseData] = useState([]);
-  const [keys, setKeys] = useState([]);
-  const [Ref, setRef] = useState(false);
-  const [lat, setLat] = useState('');
-  const [lon, setLon] = useState('');
-  const [data2, setData2] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [dropdownValues, setDropdownValues] = useState([]);
+  const [attributes, setAttributes] = useState('0.50');
+  const [attributesDataset, setAttributesDataset] = useState('0.50');
 
-  const handleReverseGeocoding = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-      const result = await response.json();
-
-      if (result) {
-        const { place_id, class: place_class, type, place_rank, addressType, railway, road, village, state, state_district, county, postcode, country, country_code } = result;
-
-        const values = [
-          { label: 'Place ID', value: place_id },
-          { label: 'Class', value: place_class },
-          { label: 'Type', value: type },
-          { label: 'Place Rank', value: place_rank },
-          { label: 'Address Type', value: addressType },
-          { label: 'Railway Name', value: railway },
-          { label: 'Road', value: road },
-          { label: 'Village', value: village },
-          { label: 'State', value: state },
-          { label: 'District', value: state_district || county },
-          { label: 'Postcode', value: postcode },
-          { label: 'Country', value: country },
-          { label: 'Country Code', value: country_code }
-        ];
-
-        setDropdownValues(values.filter(item => item.value)); // Filter out empty values
-        console.log(result)
-        setData2(result.address);
-        setError('');
-      } else {
-        setError('Location not found.');
-      }
-    } catch (err) {
-      setError('Error occurred while fetching location details.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     const formData = new FormData();
@@ -219,6 +172,7 @@ const CheckAllFields = () => {
     }
   }
   const onChange = (e) => {
+    console.log(e)
     const { source, target } = e;
     if (target.length === 1) {
       setTarget(target);
@@ -226,7 +180,31 @@ const CheckAllFields = () => {
       setTarget(target.length > 1 ? [target[target.length - 1]] : []);
     }
   };
-
+  const fields = [
+    'Place_id',
+    'Class',
+    'Type',
+    'Place_rank',
+    'AddressType',
+    'Railway',
+    'Road',
+    'Village',
+    'Country',
+    'District',
+    'State',
+    'PostCode',
+    'Country_code',
+    'North Coordinates',
+    'South Coordinates',
+    'West Coordinates',
+    'East Coordinates',
+  ];
+  const handleDropdownChangeField = (event) => {
+    setAttributes(event.target.value);
+  };
+  const handleTarget = (event) => {
+    setAttributesDataset(event.target.value);
+  };
   return (
     <>
  
@@ -274,57 +252,24 @@ const CheckAllFields = () => {
 
         <Button onClick={attributeSelected} style={{ marginBottom: "50px" }}>start Test</Button>
       </center>
-      <div className="app">
-      <header>
-        <h1>Geolocation Finder</h1>
-      </header>
-      <main>
-        <div className="coordinate-input">
-          <h2>Enter Coordinates</h2>
-          <input
-            type="text"
-            placeholder="Enter latitude"
-            value={lat}
-            onChange={(e) => setLat(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Enter longitude"
-            value={lon}
-            onChange={(e) => setLon(e.target.value)}
-          />
-          <button onClick={handleReverseGeocoding}>Find Location</button>
-        </div>
-        {loading && <div className="loader">Loading...</div>}
-        {error && <div className="error">{error}</div>}
-        {data2 && (
-          <div className="results">
-            <h2>Location Information</h2>
-            <p><strong>Country:</strong> {data2.country}</p>
-            <p><strong>State:</strong> {data2.state}</p>
-            {data2.state_district && <p><strong>State District:</strong> {data2.state_district}</p>}
-            {data2.county && <p><strong>County:</strong> {data2.county}</p>}
-            {data2.city && <p><strong>City:</strong> {data2.city}</p>}
-            {data2.town && <p><strong>Town:</strong> {data2.town}</p>}
-            {data2.village && <p><strong>Village:</strong> {data2.village}</p>}
-
-            <div className="dropdowns">
-              <label>
-                Select Information:
-                <select>
-                  <option value="">Select</option>
-                  {dropdownValues.map((item, index) => (
-                    <option key={index} value={item.value}>
-                      {item.label}: {item.value}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </div>
-        )}
-      </main>
-    </div>
+      <Dropdown value={attributes} onChange={handleDropdownChangeField}>
+  {fields.map((field, index) => (
+    <Option key={index} value={field}>
+      {field}
+    </Option>
+  ))}
+</Dropdown>
+{target.value}
+<Dropdown value={attributesDataset} onChange={handleTarget}>
+  {target?.map((field, index) => (
+    <Option key={index} value={field?.label}>
+      {field}
+    </Option>
+  ))}
+</Dropdown>
+              
+     
+    
       </>
   )
 }

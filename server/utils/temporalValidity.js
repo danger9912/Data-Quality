@@ -7,7 +7,6 @@ const temporalValidity = (attributes, data) => {
     data.forEach(entry => {
         attributes.forEach(attr => {
             const date = entry[attr];
-            // console.log(date)
             if (!isValidDate(date)) {
                 result[attr]++;
             }
