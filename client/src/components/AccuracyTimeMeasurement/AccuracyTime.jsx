@@ -7,7 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Swal from 'sweetalert2';
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
 import * as XLSX from "xlsx";
-import * as FileSaver from "file-saver";
+// import * as FileSaver from "file-saver";
 import { PickList } from "primereact/picklist";
 
 const TableWrapper = styled.div`
@@ -99,15 +99,15 @@ const Lab = styled.div`
   margin-top:10px;
 `;
 
-const Button1 = styled.button`
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  font-size: 15px;
-  cursor: pointer;
-  border-radius: 8px;
-`;
+// const Button1 = styled.button`
+//   background-color: #4CAF50;
+//   border: none;
+//   color: white;
+//   padding: 10px 20px;
+//   font-size: 15px;
+//   cursor: pointer;
+//   border-radius: 8px;
+// `;
 const AccuracyTime = () => {
   const [selectedFilename, setSelectedFilename] = useState("");
   const [data, setData] = useState([]);
@@ -121,10 +121,10 @@ const AccuracyTime = () => {
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [tableData, setTableData] =useState([]);
-  const [downloadedFileName, setDownloadedFileName] = useState("");
-  const [downloadingData, setDownloadingData] = useState(false);
+  // const [downloadedFileName, setDownloadedFileName] = useState("");
+  // const [down/loadingData, setDownloadingData] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [responseData, setResponseData] = useState([]);
+  // const [responseData, setResponseData] = useState([]);
   const [mean,setMean] =useState("");
   const [source, setSource] = useState([]);
   const [ target,setTarget] = useState([]);

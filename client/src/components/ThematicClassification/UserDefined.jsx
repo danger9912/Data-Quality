@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ConfusionMatrix from './ConfusionMatrix';
+import ConfusionMatrix from '../ConfusionMatrix';
 
 const TableWrapper = styled.div`
   max-height: 450px; /* Set the height you want for the scrollable area */

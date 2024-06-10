@@ -175,7 +175,7 @@ const StateFormat = () => {
     }
   }
   const onChange = (e) => {
-    // const { source, target } = e;
+    const { source, target } = e;
 
     // Limit the target list to the last two selected items
     setTarget(target.slice(-2));

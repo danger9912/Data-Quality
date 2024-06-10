@@ -174,7 +174,7 @@ const fetchStationCode = async () => {
   }
 };
 const onChange = (e) => {
-  // const { source, target } = e;
+  const { source, target } = e;
 
   // Check if exactly one item is selected in the target list
   if (target.length === 1) {

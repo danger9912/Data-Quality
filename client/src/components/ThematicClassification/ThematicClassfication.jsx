@@ -12,10 +12,10 @@ import DownloadIcon from "@mui/icons-material/Download";
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
-import ErrorModal from "./ErrorModal";
-import "./Omission.css";
+import ErrorModal from "../ErrorModal";
+import "../Omission.css";
 import styled from 'styled-components';
-import ConfusionMatrix from './ConfusionMatrix'
+import ConfusionMatrix from '../ConfusionMatrix'
 const TableWrapper = styled.div`
   max-height: 450px;
   overflow-y: auto;
@@ -258,8 +258,11 @@ const ThematicClassfication = () => {
   };
 
   const handleCheckboxChange = (event, rowIndex, optionIndex) => {
+    console.log("hi")
     const { checked } = event.target;
+    console.log(checked)
     const updatedSelectedValues = [...selectedValues];
+    console.log(updatedSelectedValues)
     const updatedRowData = [...rowData];
 
     updatedSelectedValues[rowIndex] = {
@@ -376,6 +379,31 @@ const ThematicClassfication = () => {
       console.log(err);
     }
   };
+  const handleSelect =() =>{
+    // console.log(setSelectedValues)'
+  
+    dummyLists.forEach((item) => {
+      setSelectedValues([{
+        dummyList: [],
+        range: { min: 0, max: 0 },
+        selectedValues: [...item]
+      }]);
+    });
+    
+  }
+  const handleDeSelect =() =>{
+    // console.log(setSelectedValues)'
+  
+
+      setSelectedValues([{
+        dummyList: [],
+        range: { min: 0, max: 0 },
+        selectedValues: {}
+      }]);
+   
+    
+  }
+
 
   const handleSave = async () => {
     console.log(domainData);
@@ -463,6 +491,7 @@ const ThematicClassfication = () => {
       console.log(error);
     }
   }
+
   // const generateConfusionMatrix = (data) => {
   //   const labels = Array.from(new Set(data.map(item => item.actual).concat(data.map(item => item.pred))));
   //   const labelIndex = {};
@@ -525,7 +554,10 @@ const ThematicClassfication = () => {
                   <th style={{ width: "15%" }}>Attributes</th>
                   <th style={{ width: "25%" }}>Data type</th>
                   <th style={{ width: "25%" }}>Range in data</th>
-                  <th style={{ width: "12.5%" }}>Required range</th>
+                  <th style={{ width: "12.5%" }}>Required range
+                  <button onClick={handleSelect}>SelectAll</button>
+                  <button onClick={handleDeSelect}>deSelectAll</button>
+                  </th>
                   <th style={{ width: "12.5%" }}>Selected range</th>
                   <th style={{ width: "12.5%" }}>
                     Total attributes

@@ -165,7 +165,7 @@ const RailwayCode = () => {
         }
       )
       console.log(response.data)
-      setData(response.data.data);
+      setData(response.data?.data);
 
 
       setincorrect(parseFloat(((response.data.errorcount) / (response.data.validCount + (response.data.errorcount))) * 100).toFixed(3));
@@ -174,7 +174,7 @@ const RailwayCode = () => {
     }
   }
   const onChange = (e) => {
-    // const { source, target } = e;
+    const { source, target } = e;
 
     // Check if exactly one item is selected in the target list
     if (target.length === 1) {

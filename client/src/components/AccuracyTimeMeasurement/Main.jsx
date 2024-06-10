@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
-import {
-  default as AccuracyHeight,
-  default as AccuracyTime,
-} from "./AccuracyInteger";
-import AccuracyNumber from "./AccuracyLatlong";
+import AccuracyTime from './AccuracyInteger';
+
+import AccuracyNumber from './AccuracyLatlong';
 
 const FormatConsist = () => {
   const [height, setHeight] = useState(0);
