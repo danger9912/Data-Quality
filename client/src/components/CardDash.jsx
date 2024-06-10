@@ -1,8 +1,8 @@
+import InfoIcon from "@mui/icons-material/Info";
 import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
-import { Link, useNavigate } from "react-router-dom";
-import InfoIcon from "@mui/icons-material/Info";
 import Modal from "react-bootstrap/Modal";
+import { Link, useNavigate } from "react-router-dom";
 
 const CardDash = ({
   omissionRate,
@@ -62,12 +62,12 @@ const CardDash = ({
     Omission: "/omission",
     Comission: "/comission",
     "Format Consistency": "/formatconsistency",
-    "Quantitative Attribute Correctness":"/Quantitative",
+    "Quantitative Attribute Correctness": "/Quantitative",
     "Domain Consistency": "/domainconsistency",
-    "Temporal validity":"/temporalval",
-    "Accuracy of Time Measurement":"/activemeasurement",
-    "Thematic Classification Correctness" : "/ThematicClassification",
-    "Non-quantitative Attribute Correctness" : "/nonquantitative",
+    "Temporal validity": "/temporalval",
+    "Accuracy of Time Measurement": "/activemeasurement",
+    "Thematic Classification Correctness": "/ThematicClassification",
+    "Non-quantitative Attribute Correctness": "/nonquantitative",
   };
 
   const borders = ["success", "danger", "info", "warning", "dark", "primary"];
@@ -89,9 +89,9 @@ const CardDash = ({
       <div
         style={{
           display: "flex",
+          justifyContent: "center",
           flexWrap: "wrap",
-          // backgroundColor:"#FDF5E6",
-          marginLeft: "3%",
+          // backgroundColor: "#FDF5E6",
         }}
       >
         {data.map((item, index) => (

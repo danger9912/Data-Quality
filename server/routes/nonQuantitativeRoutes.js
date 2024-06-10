@@ -1,8 +1,9 @@
-const nonQuantitativeController = require('../controllers/nonQuantitativeController');
-const express = require('express');
+const nonQuantitativeController = require("../controllers/nonQuantitativeController");
+const express = require("express");
 const router = express.Router();
 
-router.post('/check',nonQuantitativeController.check);
+// router.post('/check',nonQuantitativeController.check);
+router.post("/check", nonQuantitativeController.codecheck);
 // router.post('/insertlog',accuracyContoller.insertData);
 // router.post('/getlogs',accuracyContoller.getAccuracy_measure);
 // router.post('/comission-log', comissionController.createOmissionLogs);

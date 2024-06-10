@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import "./GeneralDetails.css";
-import CardDash from "./CardDash";
 import axios from "axios";
+import React, { useState } from "react";
+import CardDash from "./CardDash";
+import "./GeneralDetails.css";
 
 const GeneralDetails = () => {
   const [fileName, setFileName] = useState("");
@@ -92,7 +92,6 @@ const GeneralDetails = () => {
               display: "flex",
               width: "fit-content",
               marginBottom: "1rem",
-              
             }}
           >
             <input

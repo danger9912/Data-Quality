@@ -1,181 +1,272 @@
 const path = require("path");
 const fs = require("fs");
-const countNull = require("../utils/countNull");
 const db = require("../database/connection");
-const fileChanges = require("../utils/fileModification");
-const XLSX = require('xlsx');
-const axios = require('axios');
+const xlsx = require("xlsx");
+
 const nonQuantitativeService = {
+  async SelectedCodeAndName(filename, attributes) {
+    try {
+      let railwayData1;
+      let railwayData;
+      let resultObject;
 
-    async SelectedCode(filename, attributes) {
+      // Read the Excel file instead of JSON file
+      const excelFilePath = path.join(
+        __dirname,
+        "..",
+        "standard_data",
+        "output1.xlsx"
+      );
+      const workbook = xlsx.readFile(excelFilePath);
+      const sheetName = workbook.SheetNames[0];
 
-        try {
-            const railwayZones = {
-                "CR": "Central Railway",
-                "ER": "Eastern Railway",
-                "ECR": "East Central Railway",
-                "ECOR": "East Coast Railway",
-                "NR": "Northern Railway",
-                "NCR": "North Central Railway",
-                "NER": "North Eastern Railway",
-                "NFR": "North Frontier Railway",
-                "NWR": "North Western Railway",
-                "SR": "Southern Railway",
-                "SCR": "South Central Railway",
-                "SER": "South Eastern Railway",
-                "SECR": "South East Central Railway",
-                "SWR": "South Western Railway",
-                "WR": "Western Railway",
-                "WCR": "West Central Railway",
-                "MRK": "Metro Railway, Kolkata",
-                "SCOR": "South Coast Railway"
-            };
+      railwayData1 = xlsx.utils
+        .sheet_to_json(workbook.Sheets[sheetName])
+        .reduce((acc, row) => {
+          acc[row["Station Code"].toUpperCase()] = row["Station Name"];
+          return acc;
+        }, {});
+      // console.log(railwayData1);
 
-            function getRailwayZones(codes) {
-                return codes.map(code => {
-                    const upperCaseCode = code.toUpperCase();
-                    return railwayZones[upperCaseCode] || "Invalid station code";
-                });
-            }
+      // ******************************************************************************************************
+      const referenceData = xlsx.utils.sheet_to_json(
+        workbook.Sheets[sheetName]
+      );
 
-            // Example usage:
-            // const stationCodes = ["cr", "Er", "xyz", "NFR"];
+      // Create a dictionary to map station codes to their respective names and zones from the reference data
+      railwayData = referenceData.reduce((acc, row) => {
+        const stationCode = row["Station Code"].toUpperCase();
+        acc[stationCode] = {
+          name: row["Station Name"],
+          zone: row["Zone"],
+        };
+        return acc;
+      }, {});
 
-            // Output: [ 'Central Railway', 'Eastern Railway', 'Invalid station code', 'North Frontier Railway' ]
+      // console.log(railwayData);
+      // ******************************************************************************************************
 
-            // console.log(filename);
+      const typ1 = attributes[0].value;
+      const typ2 = attributes[1].value;
+      // console.log(typ1);
+      // console.log(typ2);
 
+      // Read the file which we are uploading!!
+      const filePath = path.join(__dirname, "..", "uploads", filename);
+      const rawData = fs.readFileSync(filePath, "utf-8");
+      const parsedData = JSON.parse(rawData);
 
-            console.log("hi:" + attributes);
-            // console.log(attributes[0]);
-            const typ1 = attributes[0].value
-            console.log(typ1)
-            const typ2 = attributes[1].value
-            // console.log("-------")
-            const filePath = path.join(__dirname, "..", "uploads", filename);
+      const orgCode = parsedData.map((item) => item[typ1]);
+      const orgName = parsedData.map((item) => item[typ2]);
 
-            const rawData = fs.readFileSync(filePath);
-            const data = JSON.parse(rawData);
+      var nullTyp1Count = 0;
+      var nullTyp2Count = 0;
 
-            const orgCode = data.map(item => item[typ1]);
-            const orgName = data.map(item => item[typ2]);
-            // const typ = attributes[0].value;
+      const filteredData = parsedData.filter((item) => {
+        const isTyp1Null = item[typ1] === "blank";
+        const isTyp2Null = item[typ2] === "blank";
 
+        if (isTyp1Null) nullTyp1Count++;
+        if (isTyp2Null) nullTyp2Count++;
 
-            // console.log(data);
+        return !isTyp1Null && !isTyp2Null;
+      });
 
-            //     console.log(typ);
-            //   console.log("gi" +data[2][typ]);
-            // console.log(data[typ1]);
-            var nullTyp1Count = 0;
-            var nullTyp2Count = 0;
+      const typ1Values = filteredData.map((item) => item[typ1]);
 
-            const filteredData = data.filter(item => {
-                
-                const isTyp1Null = item[typ1] === 'blank' ? true : false;
-                const isTyp2Null = item[typ2] === 'blank'? true :false;
+      const pred = getRailwayNames(typ1Values);
+      const actual = filteredData.map((item) => item[typ2]);
 
-                if (isTyp1Null) nullTyp1Count++;
-                if (isTyp2Null) nullTyp2Count++;
+      const combine = filteredData.map((item, index) => {
+        const stationCode = typ1Values[index];
+        const zone = railwayData[stationCode]
+          ? railwayData[stationCode].zone
+          : "Unknown Zone";
+        return {
+          pred: pred[index],
+          actual: actual[index],
+          stationCode: stationCode,
+          zone: zone,
+        };
+      });
 
-                return !isTyp1Null && !isTyp2Null;
-            });
+      const orgcomb = parsedData.map((item, index) => ({
+        code: orgCode[index],
+        number: orgName[index],
+      }));
+      // console.log(combine);
 
-
-            const typ1Values = filteredData.map(item => item[typ1]);
-
-            const pred = getRailwayZones(typ1Values);
-            const actual = filteredData.map(item => item[typ2])
-
-            const combine = filteredData.map((item, index) => ({
-                pred: pred[index],
-                actual: actual[index],
-                stationCode: typ1Values[index]
-            }));
-            const orgcomb = data.map((item, index) => ({
-                code: orgCode[index],
-                number: orgName[index],
-                
-            }));
-
-            // console.log(getRailwayZones(typ1Values));
-            // console.log(typ1Values);
-
-
-            //       // Return the station codes as JSON
-            // console.log("Hi"+stationCodes)
-
-            // //   let originalDate;
-
-
-            // let I =0;
-            // let W =0;
-            // const combinedData = data.map(item => {
-            //     const state = item[typ];
-
-            //     var valid = "valid";
-
-            //     if(states.includes( item[typ].toUpperCase()) === true ){
-            //          valid  = "valid";
-            //          I++;
-            //     }
-            //     else{
-            //         valid  = "Invalid";
-            //          W++;
-            //     }
-            //     // const vaild = stationCodes.includes(item[typ]) ? "Valid" : "NotValid";
-            //     return { state, valid };
-            //     // return stationCodes.includes(item[typ]);
-            // });
-
-            //   const comb = {data : combinedData, errorcount : W,validCount :I}
-            // console.log(comb);
-            console.log(combine)
-
-            return {data : combine , nullcount1  : nullTyp1Count , nullcount2:nullTyp2Count,totallength : data.length , originalData : orgcomb};
-            // return "hwllo"
-        } catch (err) {
-            console.error("Error fetching logs:", err);
-            throw new Error("Internal Server Error");
+      // Divide the stations according to the zones
+      const zoneStations = referenceData.reduce((acc, row) => {
+        const zone = row["Zone"];
+        if (!acc[zone]) {
+          acc[zone] = [];
         }
-    },
-    async createLog(logData) {
-        try {
-            await db.query(
-                "INSERT INTO stationcode (filename, error_percentage,created_time) VALUES ($1, $2,$3)",
-                [logData.filename, logData.error_percentage, logData.created_time]
-            );
+        acc[zone].push({
+          code: row["Station Code"],
+          name: row["Station Name"],
+        });
+        return acc;
+      }, {});
 
-        } catch (error) {
-            console.error("Error creating log entry:", error);
-            throw new Error("Internal Server Error");
-        }
-    },
-    async getlogs() {
-        try {
-            const result = await db.query(
-                "SELECT * FROM stationcode"
-            );
-            return result.rows;
+      // console.log(zoneStations);
 
-        } catch (error) {
-            console.error("Error creating log entry:", error);
-            throw new Error("Internal Server Error");
-        }
-    },
+      // ***********************************************************************************
 
-    async viewFile(log) {
-        console.log(log)
-        try {
-            const result = await db.query(
-                "SELECT * FROM stationcode"
-            );
-            return result.rows;
+      resultObject = {
+        data: combine,
+        nullcount1: nullTyp1Count,
+        nullcount2: nullTyp2Count,
+        totallength: parsedData.length,
+        originalData: orgcomb,
+        zoneData: zoneStations,
+      };
+      return resultObject;
 
-        } catch (error) {
-            console.error("Error creating log entry:", error);
-            throw new Error("Internal Server Error");
-        }
+      function getRailwayNames(codes) {
+        return codes.map((code) => {
+          const upperCaseCode = code.toUpperCase();
+          // console.log(upperCaseCode);
+          return railwayData1[upperCaseCode] || "Invalid station code";
+        });
+      }
+    } catch (error) {
+      console.log("Yaarrrr error aa gayi: ", error);
+      return undefined;
     }
+  },
+
+  async SelectedCode(filename, attributes) {
+    try {
+      const railwayZones = {
+        CR: "Central Railway",
+        ER: "Eastern Railway",
+        ECR: "East Central Railway",
+        ECOR: "East Coast Railway",
+        NR: "Northern Railway",
+        NCR: "North Central Railway",
+        NER: "North Eastern Railway",
+        NFR: "North Frontier Railway",
+        NWR: "North Western Railway",
+        SR: "Southern Railway",
+        SCR: "South Central Railway",
+        SER: "South Eastern Railway",
+        SECR: "South East Central Railway",
+        SWR: "South Western Railway",
+        WR: "Western Railway",
+        WCR: "West Central Railway",
+        MRK: "Metro Railway, Kolkata",
+        SCOR: "South Coast Railway",
+      };
+
+      function getRailwayZones(codes) {
+        return codes.map((code) => {
+          const upperCaseCode = code.toUpperCase();
+          return railwayZones[upperCaseCode] || "Invalid station code";
+        });
+      }
+
+      // Example usage:
+      // const stationCodes = ["cr", "Er", "xyz", "NFR"];
+      // Output: [ 'Central Railway', 'Eastern Railway', 'Invalid station code', 'North Frontier Railway' ]
+      // console.log(filename);
+
+      console.log("hi: " + attributes);
+      // console.log(attributes[0]);
+      const typ1 = attributes[0].value;
+      console.log(typ1);
+      const typ2 = attributes[1].value;
+      // console.log("-------")
+      const filePath = path.join(__dirname, "..", "uploads", filename);
+
+      const rawData = fs.readFileSync(filePath);
+      const data = JSON.parse(rawData);
+
+      const orgCode = data.map((item) => item[typ1]);
+      const orgName = data.map((item) => item[typ2]);
+      // const typ = attributes[0].value;
+
+      // console.log(data);
+
+      //     console.log(typ);
+      //   console.log("gi" +data[2][typ]);
+      // console.log(data[typ1]);
+      var nullTyp1Count = 0;
+      var nullTyp2Count = 0;
+
+      const filteredData = data.filter((item) => {
+        const isTyp1Null = item[typ1] === "blank" ? true : false;
+        const isTyp2Null = item[typ2] === "blank" ? true : false;
+
+        if (isTyp1Null) nullTyp1Count++;
+        if (isTyp2Null) nullTyp2Count++;
+
+        return !isTyp1Null && !isTyp2Null;
+      });
+
+      const typ1Values = filteredData.map((item) => item[typ1]);
+
+      const pred = getRailwayZones(typ1Values);
+      const actual = filteredData.map((item) => item[typ2]);
+
+      const combine = filteredData.map((item, index) => ({
+        pred: pred[index],
+        actual: actual[index],
+        stationCode: typ1Values[index],
+      }));
+      const orgcomb = data.map((item, index) => ({
+        code: orgCode[index],
+        number: orgName[index],
+      }));
+
+      console.log(combine);
+
+      return {
+        data: combine,
+        nullcount1: nullTyp1Count,
+        nullcount2: nullTyp2Count,
+        totallength: data.length,
+        originalData: orgcomb,
+      };
+      // return "hwllo"
+    } catch (err) {
+      console.error("Error fetching logs:", err);
+      throw new Error("Internal Server Error");
+    }
+  },
+
+  //********************************************************************************************************
+
+  async createLog(logData) {
+    try {
+      await db.query(
+        "INSERT INTO stationcode (filename, error_percentage,created_time) VALUES ($1, $2,$3)",
+        [logData.filename, logData.error_percentage, logData.created_time]
+      );
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  },
+  async getlogs() {
+    try {
+      const result = await db.query("SELECT * FROM stationcode");
+      return result.rows;
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  },
+
+  async viewFile(log) {
+    console.log(log);
+    try {
+      const result = await db.query("SELECT * FROM stationcode");
+      return result.rows;
+    } catch (error) {
+      console.error("Error creating log entry:", error);
+      throw new Error("Internal Server Error");
+    }
+  },
 };
 module.exports = nonQuantitativeService;

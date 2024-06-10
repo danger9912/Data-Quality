@@ -1,80 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { Button } from "react-bootstrap";
 import { PickList } from "primereact/picklist";
-import styled from 'styled-components';
-import ConfusionMatrix from './ConfusionMatrix';
-
-const TableWrapper = styled.div`
-  max-height: 450px;
-  overflow-y: auto;
-  width: 500px;
-  height: 550px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-`;
-
-const DataContainer = styled.div`
-  position: relative;
-  margin: 100px 15px 50px 100px;
-`;
-
-const Dropdown = styled.select`
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  width: 150px;
-  margin-bottom: 10px;
-`;
-
-const Option = styled.option`
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-`;
-
-const Table1 = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #ccc; 
-  border-radius: 8px;
-`;
-
-const TableHeader = styled.th`
-  background-color: #f2f2f2;
-  padding: 10px;
-  font-weight: bold;
-  text-align: left;
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  text-align: left;
-`;
-
-const TableBodyRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  &:hover {
-    background-color: #ddd;
-  }
-`;
-
-const Lab = styled.div`
-  background-color: red;
-  color: black;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-`;
+import React, { useEffect, useRef, useState } from "react";
+import { Button } from "react-bootstrap";
+import ConfusionMatrix from "./ConfusionMatrix.jsx";
+import "./NonQuantitative.css";
 
 const NonQuantitative = () => {
   const [source, setSource] = useState([]);
@@ -83,8 +12,8 @@ const NonQuantitative = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [confusionMatrix, setConfusionMatrix] = useState([]);
-  // const [data, setData] = useState([]);
-  const [incorrect, setIncorrect] = useState('');
+  const [incorrect, setIncorrect] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
@@ -92,7 +21,10 @@ const NonQuantitative = () => {
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:3001/api/generaldetails", formData);
+      const response = await axios.post(
+        "http://localhost:3001/api/generaldetails",
+        formData
+      );
       if (response.status === 201) {
         setSelectedFilename(response.data);
       }
@@ -104,10 +36,26 @@ const NonQuantitative = () => {
     }
   };
 
+  const handleRemoveFile = () => {
+    setSelectedFilename("");
+    setSource([]);
+    setTarget([]);
+    setData([]);
+    setOriginalData([]);
+    setConfusionMatrix([]);
+    setIncorrect("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const fetchFieldNames = async () => {
     try {
       if (selectedFilename) {
-        const response = await axios.post("http://localhost:3001/api/fieldnames", { filename: selectedFilename });
+        const response = await axios.post(
+          "http://localhost:3001/api/fieldnames",
+          { filename: selectedFilename }
+        );
         const fieldNames = response.data.field_names.map((fieldName) => ({
           label: fieldName,
           value: fieldName,
@@ -123,43 +71,115 @@ const NonQuantitative = () => {
 
   const fetchStationCode = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/nonquantitative/check', {
-        filename: selectedFilename,
-        attributes: target,
-      });
+      const response = await axios.post(
+        "http://localhost:3001/api/nonquantitative/check",
+        {
+          filename: selectedFilename,
+          attributes: target,
+        }
+      );
       setData(response.data.data);
-      setIncorrect(parseFloat(((response.data.nullcount1) / response.data.totallength) * 100).toFixed(3));
-      setOriginalData(response.data.originalData)
+      setIncorrect(
+        parseFloat(
+          (response.data.nullcount1 / response.data.totallength) * 100
+        ).toFixed(3)
+      );
+      setOriginalData(response.data.originalData);
       setConfusionMatrix(response.data.data);
-      // generateConfusionMatrix(response.data.data);
-      const filteredData = response.data.data.filter(item => item.pred != null && item.actual != null);
+      const filteredData = response.data.data.filter(
+        (item) => item.pred != null && item.actual != null
+      );
       setConfusionMatrix(filteredData);
-      // console.log(response?.data?.data?.length)
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     }
   };
-  const generateConfusionMatrix = (data) => {
-    const labels = Array.from(new Set(data.map(item => item.actual).concat(data.map(item => item.pred))));
-    const labelIndex = {};
-    labels.forEach((label, index) => {
-      labelIndex[label] = index;
-    });
 
-    const matrix = Array(labels.length).fill(0).map(() => Array(labels.length).fill(0));
+  const fetchStationCodeandName = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/nonquantitative/check",
+        {
+          filename: selectedFilename,
+          attributes: target,
+        }
+      );
 
-    data.forEach(item => {
-      const actualIndex = labelIndex[item.actual];
-      const predIndex = labelIndex[item.pred];
-      matrix[actualIndex][predIndex]++;
-    });
+      if (response.data) {
+        console.log("API Response:", response.data);
 
-    setConfusionMatrix(matrix);
-    
+        if (Array.isArray(response.data.data)) {
+          setData(response.data.data);
+        } else {
+          console.error("Data is not an array:", response.data.data);
+        }
+
+        setIncorrect(
+          parseFloat(
+            (response.data.nullcount1 / response.data.totallength) * 100
+          ).toFixed(3)
+        );
+        setOriginalData(response.data.originalData);
+
+        console.log(response.data.data[0].zone);
+
+        // setConfusionMatrix(response.data.data);
+        generateConfusionMatrix(response.data.data);
+        const filteredData = response.data.data.filter(
+          (item) => item.zone != null && item.zone != null
+        );
+        console.log(filteredData);
+        setConfusionMatrix(filteredData);
+      } else {
+        console.error("API response undefined");
+      }
+    } catch (error) {
+      console.error("Ye Dekha error aaya:", error);
+    }
   };
-  // useEffect(()=>{
-  //   console.log(d)
-  // },[])
+
+  const generateConfusionMatrix = (data) => {
+    // const labels = Array.from(
+    //   new Set(
+    //     data.map((item) => item.zone).concat(data.map((item) => item.zone))
+    //   )
+    // );
+    // const labelIndex = {};
+    // labels.forEach((label, index) => {
+    //   labelIndex[label] = index;
+    // });
+
+    // const matrix = Array(labels.length)
+    //   .fill(0)
+    //   .map(() => Array(labels.length).fill(0));
+
+    // data.forEach((item) => {
+    //   const actualIndex = labelIndex[item.zone];
+    //   const predIndex = labelIndex[item.zone];
+    //   matrix[actualIndex][predIndex]++;
+    // });
+
+    // setConfusionMatrix(matrix);
+
+    const generateConfusionMatrix = (data) => {
+      // Extract unique zones
+      const zones = Array.from(new Set(data.map((item) => item.zone)));
+
+      // Initialize confusion matrix
+      const matrix = Array(zones.length)
+        .fill(0)
+        .map(() => Array(zones.length).fill(0));
+
+      // Populate confusion matrix
+      data.forEach((item) => {
+        const actualIndex = zones.indexOf(item.zone);
+        matrix[actualIndex][actualIndex]++;
+      });
+
+      // Set confusion matrix state
+      setConfusionMatrix(matrix);
+    };
+  };
 
   const onChange = (e) => {
     const { target } = e;
@@ -168,25 +188,44 @@ const NonQuantitative = () => {
 
   return (
     <div>
-      <h2>Non - Quantitative</h2>
+      <h2 className="Heading">Non Quantitative</h2>
       <center>
-        <input
+        <div className="input-container">
+          <input
+            className="file-input"
+            onChange={handleFileChange}
+            type="file"
+            name="excelFile"
+            ref={fileInputRef}
+          />
+          <Button
+            onClick={handleRemoveFile}
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              marginLeft: "20px",
+            }}
+          >
+            Remove File
+          </Button>
+        </div>
+        <div>
+          <Button
+            onClick={fetchFieldNames}
+            style={{ marginRight: "10px", marginTop: "1rem" }}
+          >
+            Read Dataset
+          </Button>
+        </div>
+        <div
           style={{
-            height: "40px",
-            width: "250px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            padding: "8px",
-            fontSize: "16px",
+            marginTop: "1%",
+            width: "70%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
           }}
-          onChange={handleFileChange}
-          type="file"
-          name="excelFile"
-        />
-        <br />
-        <br />
-        <Button onClick={fetchFieldNames}>Read Dataset</Button>
-        <div style={{ marginTop: "1%", width: "70%", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
+        >
           <div style={{ flex: "1", marginRight: "10px" }}>
             <PickList
               source={source}
@@ -202,76 +241,82 @@ const NonQuantitative = () => {
             />
           </div>
         </div>
-        <Button onClick={fetchStationCode} style={{ marginBottom: "50px" }}>Start Test</Button>
+        <Button
+          onClick={fetchStationCodeandName}
+          style={{ marginBottom: "50px" }}
+        >
+          Start Test
+        </Button>
       </center>
       {data.length !== 0 && (
-        <MainContainer>
+        <div className="main-container">
+          <div className="data-container">
+            {/* ******************************************************************************* */}
 
-<div style={{display : "flex"}}>
-          <DataContainer>
             <div style={{ display: "flex" }}>
               <h4>Data Table</h4>
             </div>
-            <Lab>
-              <strong>Null Percentage: </strong>{incorrect}%<br></br>
-            </Lab>
-            <TableWrapper>
-              <Table1>
+
+            {/* ******************************************************************************* */}
+            <div className="table-wrapper">
+              <table className="table1">
                 <thead>
                   <tr>
-                    <TableHeader>Sr No.</TableHeader>
-                    <TableHeader>railway code</TableHeader>
-                    <TableHeader>railwayName</TableHeader>
-                  
+                    <th className="table-header">Sr No.</th>
+                    <th className="table-header">railway code</th>
+                    <th className="table-header">railwayName</th>
                   </tr>
                 </thead>
                 <tbody>
                   {originalData.map((item, index) => (
-                    <TableBodyRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item?.code}</TableCell>
-                      <TableCell>{item?.number}</TableCell>
-                     
-                    </TableBodyRow>
+                    <tr className="table-body-row" key={index}>
+                      <td className="table-cell">{index + 1}</td>
+                      <td className="table-cell">{item?.code}</td>
+                      <td className="table-cell">{item?.number}</td>
+                    </tr>
                   ))}
                 </tbody>
-              </Table1>
-            </TableWrapper>
-          </DataContainer>
-          <DataContainer>
+              </table>
+            </div>
+
+            {/* ******************************************************************************* */}
+
+            <div className="lab">
+              <strong>Null Percentage: </strong>
+              {incorrect}%<br></br>
+            </div>
+            {/* ******************************************************************************* */}
+          </div>
+          <div className="data-container">
             <div style={{ display: "flex" }}>
               <h4>Filter Table</h4>
             </div>
-           
-            <TableWrapper>
-              <Table1>
+            <div className="table-wrapper">
+              <table className="table1">
                 <thead>
                   <tr>
-                    <TableHeader>Sr No.</TableHeader>
-                    <TableHeader>Station Code</TableHeader>
-                    <TableHeader>Predicted value</TableHeader>
-                    <TableHeader>Actual value</TableHeader>
+                    <th className="table-header">Sr No.</th>
+                    <th className="table-header">Station Code</th>
+                    <th className="table-header">Predicted value</th>
+                    <th className="table-header">Actual value</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((item, index) => (
-                    <TableBodyRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item?.stationCode}</TableCell>
-                      <TableCell>{item?.pred}</TableCell>
-                      <TableCell>{item?.actual}</TableCell>
-                    </TableBodyRow>
+                    <tr className="table-body-row" key={index}>
+                      <td className="table-cell">{index + 1}</td>
+                      <td className="table-cell">{item?.stationCode}</td>
+                      <td className="table-cell">{item?.pred}</td>
+                      <td className="table-cell">{item?.actual}</td>
+                    </tr>
                   ))}
                 </tbody>
-              </Table1>
-            </TableWrapper>
-          </DataContainer>
+              </table>
+            </div>
           </div>
-
-
-        </MainContainer>
-      ) }
-      <ConfusionMatrix  data = {confusionMatrix}></ConfusionMatrix> 
+        </div>
+      )}
+      <ConfusionMatrix data={confusionMatrix}></ConfusionMatrix>
     </div>
   );
 };
