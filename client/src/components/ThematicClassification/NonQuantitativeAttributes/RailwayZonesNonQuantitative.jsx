@@ -8,7 +8,8 @@ import { PickList } from "primereact/picklist";
 
 import styled from 'styled-components';
 
-import ConfusionMatrix from '../ConfusionMatrix';
+import ConfusionMatrix from '../../ConfusionMatrix';
+import RelativeMissclassification from '../../MisClassificationMatrix';
 
 
 
@@ -565,8 +566,9 @@ const NonQuantitative = () => {
                 </MainContainer>
 
             )}
+
 <div style={{width:"100%"}}>
-            <ConfusionMatrix data={confusionMatrix}></ConfusionMatrix>
+            <RelativeMissclassification data={confusionMatrix}></RelativeMissclassification>
             </div>
         </div>
 

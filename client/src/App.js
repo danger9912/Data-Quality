@@ -10,7 +10,7 @@ import TemporalVal from "./components/TemporalVal";
 import Format from "./components/Format";
 import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
 import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime";
-import Main from "./components/AccuracyTimeMeasurement/Main";
+import Main from "./components/ThematicClassification/QuantitativeAttributes/Main";
 import DateFormat from './components/DateFormat';
 // import Pincodeformate from "./components/FormatConsistency/Pincodeformate";
 import FormatConsist from "./components/FormatConsist";
@@ -19,8 +19,8 @@ import FormatConsist from "./components/FormatConsist";
 // import DistrictFormat from "./components/FormatConsistency/DistrictFormat";
 // import AccuracyInteger from "./components/AccuracyTimeMeasurement/AccuracyInteger"
 // import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime"
-import ThematicClassfication from "./components/ThematicClassification/ThematicClassfication";
-import NonQuantitative from "./components/ThematicClassification/Main";
+import ThematicClassfication from "./components/ThematicClassification/ThematicClassification/Main";
+import NonQuantitative from "./components/ThematicClassification/NonQuantitativeAttributes/Main";
 import CheckAllFields from "./components/CheckAllFields";
 // import Comission from "./components/Comission";
 // import DateFormat from "./components/DateFormat";

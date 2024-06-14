@@ -2,7 +2,7 @@ import axios from "axios";
 import { PickList } from "primereact/picklist";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import ConfusionMatrix from "../ConfusionMatrix.jsx";
+import RelativeMissclassification from "../../MisClassificationMatrix";
 import "./NonQuantitative.css";
 import styled from 'styled-components';
 const TableWrapper = styled.div`
@@ -409,7 +409,7 @@ const NonQuantitative = () => {
         </div>
       )}
       <div className="confusion-matrix-container">
-      <ConfusionMatrix data={confusionMatrix}></ConfusionMatrix>
+      <RelativeMissclassification data={confusionMatrix}></RelativeMissclassification>
     </div>
     
     </div>
