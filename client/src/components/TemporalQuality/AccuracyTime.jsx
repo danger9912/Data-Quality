@@ -287,15 +287,15 @@ const AccuracyTime = () => {
     const standardError = standardDeviation / Math.sqrt(sampleSize);
     const zScore = zScoreLookup(confidenceLevel);
     const marginOfError = zScore * standardError;
-    const lowerLimit = mean - marginOfError;
-    const upperLimit = mean + marginOfError;
+    const lowerLimit = mean - (marginOfError);
+    const upperLimit = mean + (marginOfError ) ;
     return [parseFloat(lowerLimit.toFixed(3)), parseFloat(upperLimit.toFixed(3))];
   };
 
   const zScoreLookup = (alpha) => {
     const zScores = {
-      "0.50": 0.6745,
-      "0.68": 0.9945,
+      "0.50": 0.6745  ,
+      "0.68": 0.9945 ,
       "0.683": 0.9945,
       "0.90": 1.645,
       "0.95": 1.96,

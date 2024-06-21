@@ -64,10 +64,11 @@ const CardDash = ({
     "Format Consistency": "/formatconsistency",
     "Quantitative Attribute Correctness": "/Quantitative",
     "Domain Consistency": "/domainconsistency",
-    "Temporal validity": "/temporalval",
+    "Temporal validity": "/temporalvalid",
     "Accuracy of Time Measurement": "/activemeasurement",
     "Thematic Classification Correctness": "/ThematicClassification",
     "Non-quantitative Attribute Correctness": "/nonquantitative",
+    "Temporal Consistency":"/temporalconsist"
   };
 
   const borders = ["success", "danger", "info", "warning", "dark", "primary"];
@@ -103,8 +104,6 @@ const CardDash = ({
               marginTop: "1.5rem",
               marginLeft: "0.5rem",
               marginRight: "1px",
-              // marginBottom: "0.5rem",
-              // backgroundColor:"#F8F8FF",
               borderWidth: "0.14rem",
               height: "90%",
             }}

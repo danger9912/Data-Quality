@@ -86,7 +86,7 @@ exports.dateFormat = async (req, res, next) => {
       header: 1,
       raw: false,
     });
-
+console.log(jsonData)
     const headers = jsonData[0];
     const data = jsonData.slice(0);
     const jsonObject = data.map((row) => {

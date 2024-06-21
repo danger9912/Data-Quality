@@ -9,7 +9,7 @@ import DomainConsistency from './components/DomainConsistency';
 import TemporalVal from "./components/TemporalVal";
 import Format from "./components/Format";
 import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
-import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime";
+import AccuracyNumber from "./components/TemporalQuality/AccuracyTime";
 import Main from "./components/ThematicClassification/QuantitativeAttributes/Main";
 import DateFormat from './components/DateFormat';
 // import Pincodeformate from "./components/FormatConsistency/Pincodeformate";
@@ -35,6 +35,8 @@ import CheckAllFields from "./components/CheckAllFields";
 // import TemporalVal from "./components/TemporalVal";
 // import ThematicClassfication from "./components/ThematicClassfication";
 import UserDefined from "./components/ThematicClassification/UserDefined";
+import TempoC from "./components/TemporalQuality/Main";
+import TemporalValidity from "./components/TemporalQuality/TemporalValidity";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
         <Route path="/format" element={<Format />} />
         <Route path="/formatdate" element={<DateFormat />} />
         <Route path="/temporalval" element={<TemporalVal />} />
+        <Route path="/temporalconsist" element={<TempoC />} />
+        <Route path="/temporalvalid" element={<TemporalValidity />} />
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyNumber />} />
         <Route path="/Quantitative" element={<Main />} />

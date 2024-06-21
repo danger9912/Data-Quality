@@ -116,6 +116,11 @@ const Navbar = () => {
               </Link>
             </div>
           </div>
+          <Link className="links" to="/userdefined" onClick={() => closeOffcanvas('content2')} >
+                <div className="hoverEffect">
+                  UserDefined
+                </div>
+              </Link>
 
         </div>
       </div>
