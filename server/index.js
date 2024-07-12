@@ -24,6 +24,7 @@ const LatlongRoutes = require("./routes/latlongRoutes");
 const accuarcyLatLongRoutes = require("./routes/accuracyLatLongRoutes");
 const nonQuantitativeRoutes = require("./routes/nonQuantitativeRoutes");
 const confusionMatrixRoutes = require("./routes/confusionMatrixRoutes");
+const positionalAccuracyRoutes = require("./routes/positionalaccuracyRoutes");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -48,6 +49,7 @@ app.use("/api/railway", railwayZonesRoutes);
 app.use("/api/latlong", LatlongRoutes);
 app.use("/api/accuracylatlong", accuarcyLatLongRoutes);
 app.use("/api/nonquantitative", nonQuantitativeRoutes);
+app.use("/api/positionalaccuracy", positionalAccuracyRoutes);
 
 app.post("/api/fieldnames", async (req, res) => {
   try {

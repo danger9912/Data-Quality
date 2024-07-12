@@ -65,6 +65,7 @@ const nonQuantitativeService = {
       const filteredData = parsedData.filter((item) => {
         const isTyp1Null = item[typ1] === "blank";
         const isTyp2Null = item[typ2] === "blank";
+        // const notbymyside
 
         if (isTyp1Null) nullTyp1Count++;
         if (isTyp2Null) nullTyp2Count++;

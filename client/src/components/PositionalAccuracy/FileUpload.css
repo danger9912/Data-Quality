@@ -1,0 +1,70 @@
+.file-upload-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-container h2 {
+    margin-bottom: 20px;
+}
+
+.file-upload-container input[type="file"] {
+    display: block;
+    margin: 0 auto 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.file-upload-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.file-upload-container button:hover {
+    background: #0056b3;
+}
+
+.progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.progress-bar-container {
+    flex-grow: 1;
+    height: 10px;
+    background: #ddd;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #007bff;
+    transition: width 0.4s;
+}
+
+.progress-bar.complete {
+    background: #28a745;
+}
+
+.progress-percentage {
+    margin-left: 10px;
+    font-size: 14px;
+    min-width: 50px;
+    text-align: right;
+}

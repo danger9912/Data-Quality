@@ -13,6 +13,9 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import NonQuantitative from "./components/NonQuantitative";
 import Omission from "./components/Omission";
+import AbsolutePA from "./components/PositionalAccuracy/AbsolutePA";
+import GriddedPA from "./components/PositionalAccuracy/GriddedPA";
+import RelativePA from "./components/PositionalAccuracy/RelativePA";
 import TemporalVal from "./components/TemporalVal";
 import ThematicClassfication from "./components/ThematicClassfication";
 import UserDefined from "./components/UserDefined";
@@ -41,6 +44,11 @@ function App() {
         <Route path="/nonquantitative" element={<NonQuantitative />} />
         <Route path="/checkallfields" element={<CheckAllFields />} />
         <Route path="/userdefined" element={<UserDefined />} />
+
+        {/* POSITIONAL ACCURACY */}
+        <Route path="/absolutepositionalaccuracy" element={<AbsolutePA />} />
+        <Route path="/relativepositionalaccuracy" element={<RelativePA />} />
+        <Route path="/griddedpositionalaccuracy" element={<GriddedPA />} />
       </Routes>
     </BrowserRouter>
   );
