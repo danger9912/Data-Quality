@@ -175,7 +175,7 @@ const StateFormat = () => {
     }
   }
   const onChange = (e) => {
-    // const { source, target } = e;
+    const { source, target } = e;
 
     // Limit the target list to the last two selected items
     setTarget(target.slice(-2));
@@ -186,14 +186,21 @@ const StateFormat = () => {
       <h2>Lat-Long Format</h2>
       <center>
         <input
-          style={{
-            height: "40px",
-            width: "250px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            padding: "8px",
-            fontSize: "16px",
-          }}
+         style={{
+
+          height: "50px",
+
+          width: "300px",
+
+          border: "1px solid #ccc",
+
+          borderRadius: "5px",
+
+          padding: "8px",
+
+          fontSize: "16px",
+
+      }}
           onChange={handleFileChange}
           type="file"
           name="excelFile"

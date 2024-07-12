@@ -174,7 +174,7 @@ const StateFormat = () => {
     }
   }
   const onChange = (e) => {
-    // const { source, target } = e;
+    const { source, target } = e;
 
     // Check if exactly one item is selected in the target list
     if (target.length === 1) {
@@ -190,14 +190,21 @@ const StateFormat = () => {
       <h2>State Format</h2>
       <center>
         <input
-          style={{
-            height: "40px",
-            width: "250px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            padding: "8px",
-            fontSize: "16px",
-          }}
+         style={{
+
+          height: "50px",
+
+          width: "300px",
+
+          border: "1px solid #ccc",
+
+          borderRadius: "5px",
+
+          padding: "8px",
+
+          fontSize: "16px",
+
+      }}
           onChange={handleFileChange}
           type="file"
           name="excelFile"

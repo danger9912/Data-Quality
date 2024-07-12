@@ -49,7 +49,6 @@ const railwayService = {
   
             console.log(data);
             console.log(typ);
-          console.log("gi" +data[2][typ]);
           
          
         //       // Return the station codes as JSON
@@ -64,7 +63,7 @@ const railwayService = {
             
             var valid = "valid";
 
-            if(railwayZones.includes( item[typ].toUpperCase()) === true ){
+            if(railwayZones.hasOwnProperty( item[typ].toUpperCase()) === true ){
                  valid  = "valid";
                  I++;
             }

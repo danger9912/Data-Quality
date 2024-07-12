@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ConfusionMatrix from './ConfusionMatrix';
+import RelativeMissclassification from '../MisClassificationMatrix';
 
 const TableWrapper = styled.div`
   max-height: 450px; /* Set the height you want for the scrollable area */
@@ -295,15 +295,21 @@ const UserDefined = () => {
                 <center style={{ marginLeft: "5%" }}>
                 <h5>Truth Data set</h5>
                     <input
-                        style={{
-                            height: "40px",
-                            width: "250px",
-                            border: "1px solid #ccc",
-                            borderRadius: "5px",
-                            padding: "8px",
-                            fontSize: "16px",
-                            marginBottom: "10px"
-                        }}
+                       style={{
+
+                        height: "50px",
+              
+                        width: "300px",
+              
+                        border: "1px solid #ccc",
+              
+                        borderRadius: "5px",
+              
+                        padding: "8px",
+              
+                        fontSize: "16px",
+              
+                    }}
                         onChange={handleFileChange2}
                         type="file"
                         name="excelFile"
@@ -376,7 +382,7 @@ const UserDefined = () => {
             </TableWrapper>
           </DataContainer>
 
-          <ConfusionMatrix  data = {conf}></ConfusionMatrix> 
+          <RelativeMissclassification  data = {conf}></RelativeMissclassification> 
 
         </div>
     )

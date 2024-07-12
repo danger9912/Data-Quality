@@ -107,12 +107,7 @@ const UnionTerritoriesFormat = () => {
   const [target, setTarget] = useState([]);
   const [selectedFilename, setSelectedFilename] = useState("");
   const [data, setData] = useState([]);
-  // const [showModal, setShowModal] = useState(false);
-  // const [tableData, setTableData] = useState([]);
   const [incorrect, setincorrect] = useState('');
-//   const [responseData, setResponseData] = useState([]);
-//   const [keys, setKeys] = useState([]);
-// const [Ref , setRef] =useState(false);
 const handleFileChange = async (event) => {
   const selectedFile = event.target.files[0];
   const formData = new FormData();
@@ -157,7 +152,7 @@ const attributeSelected = () => {
   fetchStationCode();
 }
 const onChange = (e) => {
-  // const { source, target } = e;
+  const { source, target } = e;
 
   // Check if exactly one item is selected in the target list
   if (target.length === 1) {
@@ -189,14 +184,21 @@ const fetchStationCode = async () => {
     <div> <h2>Union Territories Format</h2>
     <center>
       <input
-        style={{
-          height: "40px",
-          width: "250px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-          padding: "8px",
-          fontSize: "16px",
-        }}
+      style={{
+
+        height: "50px",
+
+        width: "300px",
+
+        border: "1px solid #ccc",
+
+        borderRadius: "5px",
+
+        padding: "8px",
+
+        fontSize: "16px",
+
+    }}
         onChange={handleFileChange}
         type="file"
         name="excelFile"

@@ -118,8 +118,6 @@ const AccuracyTime = () => {
   const [notRandData, setNotRandData] = useState([]);
   const [confidenceLevel, setConfidenceLevel] = useState('0.50');
   const [limits, setLimits] = useState([]);
-  const [limitsLong, setLimitsLong] = useState([]);
-  const [randDataLong , setRandDataLong] = useState([]);
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [tableData, setTableData] =useState([]);
@@ -180,14 +178,14 @@ const AccuracyTime = () => {
 
   useEffect(() => {
     // console.log("178")
-    const dashCount = data.filter(item => item.isValid === false).length;
+    const dashCount = data.filter(item => item.convertedData === 'Invalid').length;
     const totalCount = data.length;
     const percentage = (dashCount / totalCount) * 100;
     setErrorPercentage(parseFloat(percentage.toFixed(4)));
   }, [data]);
 
   useEffect(() => {
-    const filtered = data.filter(item => item.isValid === true);
+    const filtered = data.filter(item => item.convertedData === 'valid');
     setFilteredData(filtered);
   }, [data]);
   useEffect(() => {
@@ -235,14 +233,14 @@ const AccuracyTime = () => {
   },[Ref])
   useEffect(()=>{
     console.log("221")
-    setLimitsLong(calculateConfidenceIntervalforLong(randData, confidenceLevel));
+    setLimits(calculateConfidenceInterval(randData, confidenceLevel));
   },[confidenceLevel, randData])
 
 
 
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/accuracylatlong/getallcols', {
+      const response = await axios.post('http://localhost:3001/api/accuracynumber/getallcols', {
         filename: selectedFilename,
         attributes: target,
       });
@@ -275,21 +273,7 @@ const AccuracyTime = () => {
   };
 // const mean =0;
   const calculateConfidenceInterval = (numbers, confidenceLevel) => {
-    const dates = numbers.map(item => item.latitude);
-     const mean = calculateMean(dates);
-    //  console.log(mean);
-     setMean(mean);
-    const standardDeviation = calculateStandardDeviation(dates);
-    const sampleSize = dates.length;
-    const standardError = standardDeviation / Math.sqrt(sampleSize);
-    const zScore = zScoreLookup(confidenceLevel);
-    const marginOfError = zScore * standardError;
-    const lowerLimit = mean - marginOfError;
-    const upperLimit = mean + marginOfError;
-    return [parseFloat(lowerLimit.toFixed(3)), parseFloat(upperLimit.toFixed(3))];
-  };
-  const calculateConfidenceIntervalforLong = (numbers, confidenceLevel) => {
-    const dates = numbers.map(item => item.longitude);
+    const dates = numbers.map(item => item.originalData);
      const mean = calculateMean(dates);
     //  console.log(mean);
      setMean(mean);
@@ -417,11 +401,16 @@ const downloadTableData = () => {
 
 
 const onChange = (e) => {
-    const { source, target } = e;
-
-    // Limit the target list to the last two selected items
-    setTarget(target.slice(-2));
-  };
+  const { source, target } = e;
+  
+  // Check if exactly one item is selected in the target list
+  if (target.length === 1) {
+    setTarget(target);
+  } else {
+    // If not exactly one item is selected, keep only the last selected item
+    setTarget(target.length > 1 ? [target[target.length - 1]] : []);
+  }
+};
 
 const attributeSelected = ()=>{
   fetchData();
@@ -430,17 +419,24 @@ const attributeSelected = ()=>{
 
   return (
     <>
-      <h2> Lat-Long Measurement</h2>
+      <h2> Accuracy of Integer Measurement</h2>
       <center>
         <input
           style={{
-            height: "40px",
-            width: "250px",
+
+            height: "50px",
+  
+            width: "300px",
+  
             border: "1px solid #ccc",
+  
             borderRadius: "5px",
+  
             padding: "8px",
+  
             fontSize: "16px",
-          }}
+  
+        }}
           onChange={handleFileChange}
           type="file"
           name="excelFile"
@@ -479,8 +475,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Latitude</TableHeader>
-                  <TableHeader>Longitude</TableHeader>
+                  <TableHeader>Number</TableHeader>
                   <TableHeader>Status</TableHeader>
                 </tr>
               </thead>
@@ -488,9 +483,8 @@ const attributeSelected = ()=>{
                 {data.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.latitude}</TableCell>
-                    <TableCell>{item.longitude}</TableCell>
-                    <TableCell>{item.isValid === true ? "true" : "false"}</TableCell>
+                    <TableCell>{item.originalData}</TableCell>
+                    <TableCell>{item.convertedData}</TableCell>
                   </TableBodyRow>
                 ))} 
               </tbody>
@@ -508,20 +502,18 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Latitude</TableHeader>
-                  <TableHeader>Longitude</TableHeader>
-                  {/* <TableHeader>Status</TableHeader> */}
+                  {/* <TableHeader>Date(YYYY-MM-DD)</TableHeader> */}
+                  <TableHeader>Number</TableHeader>
                 </tr>
               </thead>
               <tbody>
                 {filteredData.map((item, index) => (
                   <TableBodyRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.latitude}</TableCell>
-                    <TableCell>{item.longitude}</TableCell>
-                    {/* <TableCell>{item.isValid === true ? "true" : "false"}</TableCell> */}
+                    {/* <TableCell>{item.convertedData}</TableCell> */}
+                    <TableCell>{item.originalData === '-' ? "---" : item.originalData}</TableCell>
                   </TableBodyRow>
-                ))} 
+                ))}
               </tbody>
             </Table1>
             </TableWrapper>
@@ -589,7 +581,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date</TableHeader>
+                  <TableHeader>Number</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>
@@ -635,7 +627,7 @@ const attributeSelected = ()=>{
               <thead>
                 <tr>
                   <TableHeader>Sr No.</TableHeader>
-                  <TableHeader>Date</TableHeader>
+                  <TableHeader>Number</TableHeader>
                   <TableHeader>Result</TableHeader>
                 </tr>
               </thead>

@@ -2,8 +2,100 @@ import axios from "axios";
 import { PickList } from "primereact/picklist";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import ConfusionMatrix from "./ConfusionMatrix.jsx";
+import RelativeMissclassification from "../../MisClassificationMatrix";
 import "./NonQuantitative.css";
+import styled from 'styled-components';
+const TableWrapper = styled.div`
+  max-height: 450px; /* Set the height you want for the scrollable area */
+  overflow-y: auto;
+  width:500px;
+  height:550px;
+  border: 1px solid #ccc; /* Add border to TableWrapper */
+  border-radius: 10px;
+`;
+const MainContainer = styled.div`
+  display: flex;
+  // margin-left: 30px;
+ 
+`;
+
+// const SectionContainer = styled.div`
+//   // width: 19%;
+//   margin-right:15px;
+// `;
+
+const DataContainer = styled.div`
+  position: relative;
+  margin-left:100px;
+  margin-right:15px;
+  margin-bottom:50px;
+// :400px;
+
+`;
+
+// const Dropdown = styled.select`
+//   padding: 10px;
+//   font-size: 16px;
+//   border-radius: 8px;
+//   width:150px;
+//   margin-bottom:10px
+// `;
+
+// const Option = styled.option`
+//   padding: 10px;
+//   font-size: 16px;
+ 
+//   border-radius: 8px;
+// `;
+
+const Table1 = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc; 
+  border-radius:8px;
+ 
+
+`;
+
+const TableHeader = styled.th`
+  background-color: #f2f2f2;
+  padding: 10px;
+  font-weight: bold;
+  text-align: left;
+`;
+
+const TableCell = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+`;
+
+const TableBodyRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  &:hover {
+    background-color: #ddd;
+  }
+`;
+
+// const ErrorLabel = styled.div`
+//   background-color: #ff4d4d;
+//   color: white;
+//   padding: 10px;
+//   font-size: 15px;
+//   border-radius: 8px;
+// `;
+const Lab = styled.div`
+  background-color: red;
+  color: black;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 8px;
+  margin-bottom:10px;
+  margin-top:10px;
+`;
+
 
 const NonQuantitative = () => {
   const [source, setSource] = useState([]);
@@ -98,7 +190,7 @@ const NonQuantitative = () => {
   const fetchStationCodeandName = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/nonquantitative/check",
+        "http://localhost:3001/api/nonquantitative/check1",
         {
           filename: selectedFilename,
           attributes: target,
@@ -188,7 +280,7 @@ const NonQuantitative = () => {
 
   return (
     <div>
-      <h2 className="Heading">Non Quantitative</h2>
+      <h2 className="Heading">Station Code Non-Quantitative</h2>
       <center>
         <div className="input-container">
           <input
@@ -295,10 +387,10 @@ const NonQuantitative = () => {
               <table className="table1">
                 <thead>
                   <tr>
-                    <th className="table-header">Sr No.</th>
-                    <th className="table-header">Station Code</th>
-                    <th className="table-header">Predicted value</th>
-                    <th className="table-header">Actual value</th>
+                    <TableHeader>Sr No.</TableHeader>
+                    <TableHeader>Station Code</TableHeader>
+                    <TableHeader>Dataset Class</TableHeader>
+                    <TableHeader>True Class</TableHeader>
                   </tr>
                 </thead>
                 <tbody>
@@ -316,7 +408,10 @@ const NonQuantitative = () => {
           </div>
         </div>
       )}
-      <ConfusionMatrix data={confusionMatrix}></ConfusionMatrix>
+      <div className="confusion-matrix-container">
+      <RelativeMissclassification data={confusionMatrix}></RelativeMissclassification>
+    </div>
+    
     </div>
   );
 };

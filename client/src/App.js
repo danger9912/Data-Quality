@@ -1,24 +1,42 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
-import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime";
-import Main from "./components/AccuracyTimeMeasurement/Main";
-import CheckAllFields from "./components/CheckAllFields";
-import Comission from "./components/Comission";
-import DateFormat from "./components/DateFormat";
-import DomainConsistency from "./components/DomainConsistency";
-import Format from "./components/Format";
-import FormatConsist from "./components/FormatConsist";
-import GeneralDetails from "./components/GeneralDetails";
-import Home from "./components/Home";
-import Navbar from "./components/Navbar";
-import NonQuantitative from "./components/NonQuantitative";
-import Omission from "./components/Omission";
-import AbsolutePA from "./components/PositionalAccuracy/AbsolutePA";
-import GriddedPA from "./components/PositionalAccuracy/GriddedPA";
-import RelativePA from "./components/PositionalAccuracy/RelativePA";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from './components/Home';
+import Navbar from './components/Navbar';
+import Omission from './components/Omission';
+import Comission from './components/Comission';
+import GeneralDetails from './components/GeneralDetails';
+import DomainConsistency from './components/DomainConsistency';
+// import FormatConsistency from "./components/FormatConsistency";
 import TemporalVal from "./components/TemporalVal";
-import ThematicClassfication from "./components/ThematicClassfication";
-import UserDefined from "./components/UserDefined";
+import Format from "./components/Format";
+import AccuracyTimeManagement from "./components/AccuracyTimeManagement";
+import AccuracyNumber from "./components/TemporalQuality/AccuracyTime";
+import Main from "./components/ThematicClassification/QuantitativeAttributes/Main";
+import DateFormat from './components/DateFormat';
+// import Pincodeformate from "./components/FormatConsistency/Pincodeformate";
+import FormatConsist from "./components/FormatConsist";
+// import StateFormat from "./components/FormatConsistency/StateFormat";
+// import UnionTerritoriesFormat from "./components/FormatConsistency/UnionTerritoriesFormat";
+// import DistrictFormat from "./components/FormatConsistency/DistrictFormat";
+// import AccuracyInteger from "./components/AccuracyTimeMeasurement/AccuracyInteger"
+// import AccuracyNumber from "./components/AccuracyTimeMeasurement/AccuracyTime"
+import ThematicClassfication from "./components/ThematicClassification/ThematicClassification/Main";
+import NonQuantitative from "./components/ThematicClassification/NonQuantitativeAttributes/Main";
+import CheckAllFields from "./components/CheckAllFields";
+// import Comission from "./components/Comission";
+// import DateFormat from "./components/DateFormat";
+// import DomainConsistency from "./components/DomainConsistency";
+// import Format from "./components/Format";
+// import FormatConsist from "./components/FormatConsist";
+// import GeneralDetails from "./components/GeneralDetails";
+// import Home from "./components/Home";
+// import Navbar from "./components/Navbar";
+// import NonQuantitative from "./components/NonQuantitative";
+// import Omission from "./components/Omission";
+// import TemporalVal from "./components/TemporalVal";
+// import ThematicClassfication from "./components/ThematicClassfication";
+import UserDefined from "./components/ThematicClassification/UserDefined";
+import TempoC from "./components/TemporalQuality/Main";
+import TemporalValidity from "./components/TemporalQuality/TemporalValidity";
 
 function App() {
   return (
@@ -34,6 +52,8 @@ function App() {
         <Route path="/format" element={<Format />} />
         <Route path="/formatdate" element={<DateFormat />} />
         <Route path="/temporalval" element={<TemporalVal />} />
+        <Route path="/temporalconsist" element={<TempoC />} />
+        <Route path="/temporalvalid" element={<TemporalValidity />} />
         <Route path="/acctimeasurement" element={<AccuracyTimeManagement />} />
         <Route path="/activemeasurement" element={<AccuracyNumber />} />
         <Route path="/Quantitative" element={<Main />} />

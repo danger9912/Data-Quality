@@ -7,7 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Swal from 'sweetalert2';
 import { Modal, Button, Table, Spinner } from "react-bootstrap";
 import * as XLSX from "xlsx";
-import * as FileSaver from "file-saver";
+// import * as FileSaver from "file-saver";
 import { PickList } from "primereact/picklist";
 
 const TableWrapper = styled.div`
@@ -99,15 +99,15 @@ const Lab = styled.div`
   margin-top:10px;
 `;
 
-const Button1 = styled.button`
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  font-size: 15px;
-  cursor: pointer;
-  border-radius: 8px;
-`;
+// const Button1 = styled.button`
+//   background-color: #4CAF50;
+//   border: none;
+//   color: white;
+//   padding: 10px 20px;
+//   font-size: 15px;
+//   cursor: pointer;
+//   border-radius: 8px;
+// `;
 const AccuracyTime = () => {
   const [selectedFilename, setSelectedFilename] = useState("");
   const [data, setData] = useState([]);
@@ -121,10 +121,10 @@ const AccuracyTime = () => {
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [tableData, setTableData] =useState([]);
-  const [downloadedFileName, setDownloadedFileName] = useState("");
-  const [downloadingData, setDownloadingData] = useState(false);
+  // const [downloadedFileName, setDownloadedFileName] = useState("");
+  // const [down/loadingData, setDownloadingData] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [responseData, setResponseData] = useState([]);
+  // const [responseData, setResponseData] = useState([]);
   const [mean,setMean] =useState("");
   const [source, setSource] = useState([]);
   const [ target,setTarget] = useState([]);
@@ -287,15 +287,15 @@ const AccuracyTime = () => {
     const standardError = standardDeviation / Math.sqrt(sampleSize);
     const zScore = zScoreLookup(confidenceLevel);
     const marginOfError = zScore * standardError;
-    const lowerLimit = mean - marginOfError;
-    const upperLimit = mean + marginOfError;
+    const lowerLimit = mean - (marginOfError);
+    const upperLimit = mean + (marginOfError ) ;
     return [parseFloat(lowerLimit.toFixed(3)), parseFloat(upperLimit.toFixed(3))];
   };
 
   const zScoreLookup = (alpha) => {
     const zScores = {
-      "0.50": 0.6745,
-      "0.68": 0.9945,
+      "0.50": 0.6745  ,
+      "0.68": 0.9945 ,
       "0.683": 0.9945,
       "0.90": 1.645,
       "0.95": 1.96,
@@ -515,13 +515,20 @@ const attributeSelected = ()=>{
       <h2>Accuracy of Time Measurement</h2>
       <center>
         <input
-          style={{
-            height: "40px",
-            width: "250px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            padding: "8px",
-            fontSize: "16px",
+             style={{
+
+              height: "50px",
+    
+              width: "300px",
+    
+              border: "1px solid #ccc",
+    
+              borderRadius: "5px",
+    
+              padding: "8px",
+    
+              fontSize: "16px",
+    
           }}
           onChange={handleFileChange}
           type="file"

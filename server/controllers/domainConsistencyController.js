@@ -12,10 +12,20 @@ exports.domainConsistencyAuto = async (req, res, next) => {
     next(err);
   }
 };
-exports.domainConfusion = async (req, res, next) => {
+exports.domainConfusionState = async (req, res, next) => {
   try {
-    const result = await domainConsistencyServices.domainConfusion(req);
-    console.log(result);
+    const result = await domainConsistencyServices.domainConfusionState(req);
+    // console.log(result);
+    res.status(200).json({ result });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+exports.domainRailwaysZones = async (req, res, next) => {
+  try {
+    const result = await domainConsistencyServices.domainRailwaysZones(req);
+    // console.log(result);
     res.status(200).json({ result });
   } catch (err) {
     console.error(err);

@@ -16,8 +16,8 @@ const latlongServices = {
       console.log(attributes);
       console.log(attributes[0]);
       console.log("-------");
-      var I= 0;
-      var W =0 ;
+      var I = 0;
+      var W = 0;
       const filePath = path.join(__dirname, "..", "uploads", filename);
       const rawData = fs.readFileSync(filePath);
       const data = JSON.parse(rawData);
@@ -31,17 +31,17 @@ const latlongServices = {
           console.error("Input is not a string.");
           return str; // Return the input unchanged
         }
-      
+
         return str.replace(/Ã‚Â°/g, '°')
-                  .replace(/Ã‚Â'/g, "'")
-                  .replace(/Ã‚Â"/g, '"')
-                  .replace(/Ã‚Â/g, '')
-                  .replace(/, /g, ' '); // Add 'g' flag to replace all occurrences
+          .replace(/Ã‚Â'/g, "'")
+          .replace(/Ã‚Â"/g, '"')
+          .replace(/Ã‚Â/g, '')
+          .replace(/, /g, ' '); // Add 'g' flag to replace all occurrences
       }
-      
-    
-      
-      
+
+
+
+
 
       function isValidLatLongDMS(dmsLat, dmsLong) {
         function dmsToDecimal(degrees, minutes, seconds, direction) {
@@ -55,20 +55,20 @@ const latlongServices = {
         function parseDMS(input) {
           // Check if input is a string
           if (typeof input !== 'string') {
-              return input;
+            return input;
           }
-      
+
           let parts = input.match(/(\d+)[°](\d+)'(\d+\.?\d*)"?([NSEW])/);
           if (!parts) {
-              return null;
+            return null;
           }
           let degrees = parseInt(parts[1], 10);
           let minutes = parseInt(parts[2], 10);
           let seconds = parseFloat(parts[3]);
           let direction = parts[4];
-      
+
           return dmsToDecimal(degrees, minutes, seconds, direction);
-      }
+        }
 
         let latDecimal = parseDMS(dmsLat);
         let longDecimal = parseDMS(dmsLong);
@@ -91,8 +91,8 @@ const latlongServices = {
       }
 
       function processCoordinates(data) {
-          let latitudes = (data.map(item => correctEncoding(item[typ1])));
-          let longitudes = (data.map(item => correctEncoding(item[typ2])));
+        let latitudes = (data.map(item => correctEncoding(item[typ1])));
+        let longitudes = (data.map(item => correctEncoding(item[typ2])));
 
 
         if (!latitudes || !longitudes) {
@@ -102,18 +102,18 @@ const latlongServices = {
           throw new Error("Number of latitudes and longitudes must be equal.");
         }
 
-        
+
 
         for (let i = 0; i < latitudes.length; i++) {
           let lat = latitudes[i];
           let long = longitudes[i];
           var isValid;
-          if(isValidLatLongDMS(lat, long) === true){
-             isValid = true;
+          if (isValidLatLongDMS(lat, long) === true) {
+            isValid = true;
             I++;
           }
-          else{
-             isValid = false;
+          else {
+            isValid = false;
             W++;
           }
 
@@ -129,7 +129,7 @@ const latlongServices = {
       }
 
       processCoordinates(data);
-      return {data:coordinateData,validCount : I,errorcount:W};
+      return { data: coordinateData, validCount: I, errorcount: W };
 
     } catch (error) {
       console.error("Error in valid entry:", error);

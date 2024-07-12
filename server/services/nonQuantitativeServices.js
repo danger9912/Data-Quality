@@ -196,8 +196,8 @@ const nonQuantitativeService = {
       var nullTyp2Count = 0;
 
       const filteredData = data.filter((item) => {
-        const isTyp1Null = item[typ1] === "blank" ? true : false;
-        const isTyp2Null = item[typ2] === "blank" ? true : false;
+        const isTyp1Null = item[typ1] === "blank" ||item[typ1] === "NULL" ||item[typ1] === "null"? true : false;
+        const isTyp2Null = item[typ2] === "blank" ||item[typ2] === "NULL"||item[typ2] === "null"? true : false;
 
         if (isTyp1Null) nullTyp1Count++;
         if (isTyp2Null) nullTyp2Count++;
@@ -207,12 +207,12 @@ const nonQuantitativeService = {
 
       const typ1Values = filteredData.map((item) => item[typ1]);
 
-      const pred = getRailwayZones(typ1Values);
-      const actual = filteredData.map((item) => item[typ2]);
+      const truth = getRailwayZones(typ1Values);
+      const dataset = filteredData.map((item) => item[typ2]);
 
       const combine = filteredData.map((item, index) => ({
-        pred: pred[index],
-        actual: actual[index],
+        pred: dataset[index],
+        actual: truth[index],
         stationCode: typ1Values[index],
       }));
       const orgcomb = data.map((item, index) => ({
@@ -220,8 +220,10 @@ const nonQuantitativeService = {
         number: orgName[index],
       }));
 
-      console.log(combine);
-
+    //   console.log(combine);
+console.log(filteredData[136])
+console.log(filteredData[134])
+console.log(filteredData[135])
       return {
         data: combine,
         nullcount1: nullTyp1Count,
