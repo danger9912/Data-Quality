@@ -1,3 +1,8 @@
 /node_modules
 /uploads
 /.env
+
+/chunks
+/merged_files
+
+*.tif

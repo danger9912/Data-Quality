@@ -64,6 +64,11 @@ function App() {
         <Route path="/nonquantitative" element={<NonQuantitative />} />
         <Route path="/checkallfields" element={<CheckAllFields />} />
         <Route path="/userdefined" element={<UserDefined />} />
+
+        {/* POSITIONAL ACCURACY */}
+        <Route path="/absolutepositionalaccuracy" element={<AbsolutePA />} />
+        <Route path="/relativepositionalaccuracy" element={<RelativePA />} />
+        <Route path="/griddedpositionalaccuracy" element={<GriddedPA />} />
       </Routes>
     </BrowserRouter>
   );

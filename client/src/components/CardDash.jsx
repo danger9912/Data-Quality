@@ -68,6 +68,9 @@ const CardDash = ({
     "Accuracy of Time Measurement": "/activemeasurement",
     "Thematic Classification Correctness": "/ThematicClassification",
     "Non-quantitative Attribute Correctness": "/nonquantitative",
+    "External/Absolute Positional Accuracy": "/absolutepositionalaccuracy",
+    "Internal/Relative Positional Accuracy": "/relativepositionalaccuracy",
+    "Gridded Data Positional Accuracy": "/griddedpositionalaccuracy";
     "Temporal Consistency":"/temporalconsist"
   };
 

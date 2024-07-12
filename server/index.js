@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
 const PORT = 3001;
+
 const fs = require('fs/promises');
 const path = require('path');
 const xlsx = require('xlsx')
@@ -25,6 +26,7 @@ const  accuarcyLatLongRoutes =require('./routes/accuracyLatLongRoutes');
 const  nonQuantitativeRoutes =require('./routes/nonQuantitativeRoutes');
 const  confusionMatrixRoutes =require('./routes/confusionMatrixRoutes');
 const  checkAllFeildsRoutes =require('./routes/checkAllFeildsRoutes');
+const positionalAccuracyRoutes = require("./routes/positionalaccuracyRoutes");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -51,6 +53,7 @@ app.use('/api/accuracylatlong',accuarcyLatLongRoutes);
 app.use('/api/nonquantitative',nonQuantitativeRoutes);
 app.use('/api/confusionmatrix',confusionMatrixRoutes);
 app.use('/api/checkAllFeilds',checkAllFeildsRoutes);
+app.use("/api/positionalaccuracy", positionalAccuracyRoutes);
 
 app.post("/api/fieldnames", async (req, res) => {
   try {
