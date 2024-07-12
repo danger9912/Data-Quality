@@ -70,8 +70,8 @@ const CardDash = ({
     "Non-quantitative Attribute Correctness": "/nonquantitative",
     "External/Absolute Positional Accuracy": "/absolutepositionalaccuracy",
     "Internal/Relative Positional Accuracy": "/relativepositionalaccuracy",
-    "Gridded Data Positional Accuracy": "/griddedpositionalaccuracy";
-    "Temporal Consistency":"/temporalconsist"
+    "Gridded Data Positional Accuracy": "/griddedpositionalaccuracy",
+    "Temporal Consistency": "/temporalconsist",
   };
 
   const borders = ["success", "danger", "info", "warning", "dark", "primary"];
